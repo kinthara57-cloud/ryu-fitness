@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Ryu • Fitness Tracker (Xmas Edition)</title>
+<title>Ryu • Fitness Tracker (New Year Edition)</title>
 <meta name="theme-color" content="#0b0f0f" />
 <style>
   :root{
@@ -58,8 +58,8 @@
 <body>
 <div class="wrap">
   <div class="banner">
-    <span class="badge">🎁</span>
-    <h1>สุขสันต์วันคริสต์มาส 🎄 | Ryu Fitness Tracker</h1>
+    <span class="badge">🎉</span>
+    <h1>Ryu Fitness Tracker • Countdown to New Year 🎆</h1>
     <span class="badge">⭐</span>
   </div>
 
@@ -105,11 +105,8 @@
 
       <div class="xmas-divider"></div>
 
-      <h3>นับถอยหลัง 🎄 คริสต์มาส & 🎆 ปีใหม่</h3>
+      <h3>นับถอยหลังสู่ปีใหม่ 🎆</h3>
       <div class="row">
-        <div class="pill">คริสต์มาส: <b id="xd">0</b> วัน <b id="xh">0</b> ชม. <b id="xm">0</b> นาที <b id="xs">0</b> วิ</div>
-      </div>
-      <div class="row" style="margin-top:8px">
         <div class="pill">ปีใหม่: <b id="d">0</b> วัน <b id="h">0</b> ชม. <b id="m">0</b> นาที <b id="s">0</b> วิ</div>
       </div>
 
@@ -123,7 +120,7 @@
 <div class="snow" id="snow"></div>
 
 <script>
-const KEY='ryu_ft_xmas_v1';
+const KEY='ryu_ft_newyear_v1';
 const pad=n=>String(n).padStart(2,'0');
 const fmt=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
 const today=new Date(new Date().toDateString());
@@ -132,24 +129,20 @@ const load=()=>JSON.parse(localStorage.getItem(KEY)||'{"marks":{},"exercises":[{
 const save=()=>localStorage.setItem(KEY,JSON.stringify(state));
 let state=load();
 
-/* ===== Countdowns ===== */
-const xmasTarget = new Date(`${new Date().getFullYear()}-12-25T00:00:00`);
+/* ===== Countdown to New Year ===== */
 const newYearTarget = new Date(`${new Date().getFullYear()+1}-01-01T00:00:00`);
-function tickCountdowns(){
+function tickCountdown(){
   const now=new Date();
-  function set(elD,elH,elM,elS,target){
-    let ms=target-now; if(ms<0) ms=0;
-    const s=Math.floor(ms/1000), d=Math.floor(s/86400),
-          h=Math.floor((s%86400)/3600),
-          m=Math.floor((s%3600)/60),
-          sc=s%60;
-    elD.textContent=d; elH.textContent=h; elM.textContent=m; elS.textContent=sc;
-  }
-  set(xd,xh,xm,xs,xmasTarget);
-  set(d,h,m,s,newYearTarget);
-  requestAnimationFrame(tickCountdowns);
+  let ms=newYearTarget-now; if(ms<0) ms=0;
+  const s=Math.floor(ms/1000),
+        d_=Math.floor(s/86400),
+        h_=Math.floor((s%86400)/3600),
+        m_=Math.floor((s%3600)/60),
+        sc=s%60;
+  d.textContent=d_; h.textContent=h_; m.textContent=m_; s.textContent=sc;
+  requestAnimationFrame(tickCountdown);
 }
-tickCountdowns();
+tickCountdown();
 
 /* ===== Calendar ===== */
 function setMark(id,val,rerender=true){ if(val===0) delete state.marks[id]; else state.marks[id]=val; save(); if(rerender){renderCal();updateStats();}}
