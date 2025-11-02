@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Ryu • Fitness Tracker (New Year Edition)</title>
+<title>Ryu • Fitness Tracker (New Year Countdown)</title>
 <meta name="theme-color" content="#0b0f0f" />
 <style>
   :root{
@@ -52,14 +52,14 @@
   .day.miss{background:linear-gradient(180deg,#2a1414,#1a0f10);color:#ffd1d1;border-style:solid}
   .snow{pointer-events:none;position:fixed;inset:0;overflow:hidden}
   .flake{position:absolute;top:-10px;width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.85);box-shadow:0 0 6px 2px rgba(255,255,255,.25)}
-  .xmas-divider{height:1px;background:linear-gradient(90deg,transparent,var(--red),var(--gold),var(--green),transparent);opacity:.6;margin:12px 0}
+  .divider{height:1px;background:linear-gradient(90deg,transparent,var(--red),var(--gold),var(--green),transparent);opacity:.6;margin:12px 0}
 </style>
 </head>
 <body>
 <div class="wrap">
   <div class="banner">
-    <span class="badge">🎉</span>
-    <h1>Ryu Fitness Tracker • Countdown to New Year 🎆</h1>
+    <span class="badge">🎆</span>
+    <h1>Ryu Fitness Tracker • Countdown to New Year</h1>
     <span class="badge">⭐</span>
   </div>
 
@@ -103,14 +103,17 @@
         <button id="addEx" class="ok">เพิ่มท่า</button>
       </div>
 
-      <div class="xmas-divider"></div>
+      <div class="divider"></div>
 
       <h3>นับถอยหลังสู่ปีใหม่ 🎆</h3>
       <div class="row">
-        <div class="pill">ปีใหม่: <b id="d">0</b> วัน <b id="h">0</b> ชม. <b id="m">0</b> นาที <b id="s">0</b> วิ</div>
+        <div class="pill">
+          เหลือ <b id="d">0</b> วัน <b id="h">0</b> ชม.
+          <b id="m">0</b> นาที <b id="sec">0</b> วิ
+        </div>
       </div>
 
-      <div class="xmas-divider"></div>
+      <div class="divider"></div>
       <button id="exportCsv">Export CSV</button>
     </aside>
   </div>
@@ -120,7 +123,7 @@
 <div class="snow" id="snow"></div>
 
 <script>
-const KEY='ryu_ft_newyear_v1';
+const KEY='ryu_ft_newyear_v2';
 const pad=n=>String(n).padStart(2,'0');
 const fmt=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
 const today=new Date(new Date().toDateString());
@@ -129,22 +132,25 @@ const load=()=>JSON.parse(localStorage.getItem(KEY)||'{"marks":{},"exercises":[{
 const save=()=>localStorage.setItem(KEY,JSON.stringify(state));
 let state=load();
 
-/* ===== Countdown to New Year ===== */
-const newYearTarget = new Date(`${new Date().getFullYear()+1}-01-01T00:00:00`);
+/* Countdown to New Year */
+const target = new Date(`${new Date().getFullYear()+1}-01-01T00:00:00`);
 function tickCountdown(){
   const now=new Date();
-  let ms=newYearTarget-now; if(ms<0) ms=0;
-  const s=Math.floor(ms/1000),
-        d_=Math.floor(s/86400),
-        h_=Math.floor((s%86400)/3600),
-        m_=Math.floor((s%3600)/60),
-        sc=s%60;
-  d.textContent=d_; h.textContent=h_; m.textContent=m_; s.textContent=sc;
+  let ms=target-now; if(ms<0) ms=0;
+  const totalSec=Math.floor(ms/1000),
+        days=Math.floor(totalSec/86400),
+        hours=Math.floor((totalSec%86400)/3600),
+        mins=Math.floor((totalSec%3600)/60),
+        secs=totalSec%60;
+  d.textContent=days;
+  h.textContent=hours;
+  m.textContent=mins;
+  sec.textContent=secs;
   requestAnimationFrame(tickCountdown);
 }
 tickCountdown();
 
-/* ===== Calendar ===== */
+/* Calendar + Tracker */
 function setMark(id,val,rerender=true){ if(val===0) delete state.marks[id]; else state.marks[id]=val; save(); if(rerender){renderCal();updateStats();}}
 function cycle(id){ const cur=state.marks[id]||0; const next=cur===1?-1:cur===-1?0:1; setMark(id,next); }
 
@@ -176,7 +182,7 @@ function updateStats(){
   statStreak.textContent=streak+' วัน';
 }
 
-/* ===== Exercises ===== */
+/* Exercises */
 function renderExercises(){
   rows.innerHTML='';
   state.exercises.forEach((ex,i)=>{
@@ -222,7 +228,7 @@ exportCsv.onclick=()=>{
   const a=document.createElement('a'); a.href=url; a.download='workout_ryu.csv'; a.click(); URL.revokeObjectURL(url);
 };
 
-/* ===== Boot ===== */
+/* Boot + Snow */
 btnTodayDone.onclick = ()=> setMark(fmt(today),1);
 btnTodayMiss.onclick = ()=> setMark(fmt(today),-1);
 btnClearToday.onclick = ()=> setMark(fmt(today),0);
@@ -233,7 +239,6 @@ next.onclick=()=>{view.setMonth(view.getMonth()+1); renderCal(); updateStats();}
   renderCal(); renderExercises(); updateStats();
 })();
 
-/* ===== Snowflakes ===== */
 (function snow(){
   const box=document.getElementById('snow');
   const W=window.innerWidth;
@@ -255,3 +260,4 @@ next.onclick=()=>{view.setMonth(view.getMonth()+1); renderCal(); updateStats();}
 </style>
 </body>
 </html>
+
