@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ryu • Fitness Tracker + New Year Countdown</title>
+  <meta name="theme-color" content="#0a0f0b" />
+  <style>
+    :root{
+      --bg:#0b0f10; --panel:#12181b; --muted:#6b7b85; --text:#eaf2f4;
+      --primary:#35d0a7; --accent:#7cc0ff; --danger:#ff6b6b; --ok:#37d67a;
+      --ring: 0 0 0 .2rem rgba(53,208,167,.35);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;
+      color:var(--text); background:radial-gradient(1200px 600px at 20% -10%, #142026 0%, transparent 60%),
+                       radial-gradient(900px 400px at 100% 0%, #0e1a26 0%, transparent 60%), var(--bg);
+    }
+    .wrap{max-width:980px;margin:auto;padding:24px}
+    .grid{display:grid; gap:16px}
+    @media(min-width:900px){ .grid{ grid-template-columns: 1.2fr .8fr } }
+
+    .card{
+      background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+      border:1px solid rgba(255,255,255,.08); border-radius:16px; padding:18px;
+      box-shadow: 0 8px 30px rgba(0,0,0,.35);
+      backdrop-filter: blur(6px);
+    }
+    h1{font-size:28px;margin:0 0 8px}
+    .muted{color:var(--muted)}
+    .row{display:flex; gap:12px; align-items:center; flex-wrap:wrap}
+    .btn{
+      border:1px solid rgba(255,255,255,.1); background:#0f1518; color:var(--text);
+      padding:10px 14px; border-radius:12px; cursor:pointer; font-weight:600;
+      transition:.15s; user-select:none;
+    }
+    .btn:hover{ transform:translateY(-1px); box-shadow:var(--ring) }
+    .btn.ok{ background:linear-gradient(90deg,#1f9d7c,#1fb18a); border-color:transparent }
+    .btn.warn{ background:#1b2023; color:#ffb3b3; border-color:#2a1717 }
+    .stat{display:grid; grid-template-columns:auto 1fr; gap:8px 12px; align-items:center;}
+    .stat .val{font-size:26px; font-weight:800}
+    .timer{display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-top:8px}
+    .pill{background:#0d1417;border:1px solid rgba(255,255,255,.08); padding:8px 12px; border-radius:10px}
+    .big{font-size:22px; font-weight:800}
+    .cal{margin-top:12px}
+    .cal-grid{display:grid; grid-template-columns:repeat(7,1fr); gap:8px}
+    .day, .dow{text-align:center; padding:10px 0; border-radius:10px; border:1px dashed rgba(255,255,255,.08);
+      background:#0e1417; min-height:44px; display:flex; align-items:center; justify-content:center;}
+    .dow{border-style:solid; background:#0c1215; color:#9cb0ba; font-weight:700}
+    .day.done{ background:linear-gradient(180deg,#0f231e,#0e1a16); border-color:#1d5; color:#bff6dc; position:relative }
+    .day.today{ outline:2px solid rgba(124,192,255,.4) }
+    .day .dot{width:8px; height:8px; border-radius:50%; background:var(--ok); position:absolute; top:6px; right:6px}
+    input[type="text"], textarea{
+      width:100%; background:#0f1518; border:1px solid rgba(255,255,255,.1);
+      color:var(--text); padding:10px 12px; border-radius:10px; outline:none
+    }
+    input[type="text"]:focus, textarea:focus{ box-shadow:var(--ring) }
+    .foot{margin-top:18px; font-size:13px; color:#97a7af}
+    .link{color:#7cc0ff; text-decoration:none}
+    .flex{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
+    .grow{flex:1}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Ryu Fitness Tracker <span class="muted">• บันทึกวันนี้ และนับถอยหลังปีใหม่</span></h1>
+
+    <div class="grid">
+      <section class="card">
+        <h2 style="margin:0 0 6px">วันนี้มึงออกกำลังกายยัง?</h2>
+        <div class="row">
+          <button id="doneBtn" class="btn ok">ทำแล้ว ✓</button>
+          <button id="undoBtn" class="btn warn">ยกเลิกวันนี้</button>
+          <div class="pill" id="todayLabel"></div>
+        </div>
+        <div style="height:8px"></div>
+        <div class="stat">
+          <div>สตรีคปัจจุบัน</div><div class="val" id="streak">0</div>
+          <div>รวมเดือนนี้</div><div class="val" id="monthTotal">0</div>
+          <div>รวมทั้งหมด</div><div class="val" id="allTotal">0</div>
+        </div>
+        <div class="cal">
+          <div class="row" style="justify-content:space-between">
+            <div class="row">
+              <button class="btn" id="prevMonth">‹</button>
+              <div class="pill" id="calTitle">เดือนนี้</div>
+              <button class="btn" id="nextMonth">›</button>
+            </div>
+            <div class="flex">
+              <input id="note" class="grow" placeholder="โน้ตวันนี้ (เช่น 'วิ่ง 20 นาที, วิดพื้น 30')" />
+              <button class="btn" id="saveNote">บันทึกโน้ต</button>
+            </div>
+          </div>
+          <div class="cal-grid" id="dow"></div>
+          <div class="cal-grid" id="calendar"></div>
+        </div>
+      </section>
+
+      <aside class="card">
+        <h2 style="margin:0 0 6px">นับถอยหลังสู่ปีใหม่</h2>
+        <div class="timer" id="countdown">
+          <div class="pill"><span class="big" id="dd">0</span> วัน</div>
+          <div class="pill"><span class="big" id="hh">0</span> ชม.</div>
+          <div class="pill"><span class="big" id="mm">0</span> นาที</div>
+          <div class="pill"><span class="big" id="ss">0</span> วิ</div>
+        </div>
+        <div style="height:16px"></div>
+        <h3 style="margin:0 0 8px">สำรอง/ย้ายข้อมูล</h3>
+        <div class="flex">
+          <button class="btn" id="exportBtn">Export JSON</button>
+          <input type="file" id="importFile" accept="application/json" />
+          <button class="btn" id="importBtn">Import</button>
+        </div>
+        <p class="foot">เก็บข้อมูลไว้ในเบราว์เซอร์ ไม่ต้องสมัครบัญชี ถ้าเปลี่ยนเครื่องใช้ปุ่ม Export/Import ย้ายข้อมูลได้</p>
+      </aside>
+    </div>
+
+    <p class="foot">© ริว | Fitness Tracker for 2025</p>
+  </div>
+
+  <script>
+    const KEY='ryu_fitness_days_v1';
+    const pad=n=>String(n).padStart(2,'0');
+    const ymd=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+    const today=()=>new Date(new Date().toDateString());
+    const getStore=()=>JSON.parse(localStorage.getItem(KEY)||'{}');
+    const setStore=d=>localStorage.setItem(KEY,JSON.stringify(d));
+    const target=new Date('2026-01-01T00:00:00');
+    function tick(){const n=new Date();let ms=target-n;if(ms<0)ms=0;
+      const s=Math.floor(ms/1000),d=Math.floor(s/86400),h=Math.floor((s%86400)/3600),
+      m=Math.floor((s%3600)/60),sc=s%60;dd.textContent=d;hh.textContent=h;mm.textContent=m;ss.textContent=sc;
+      requestAnimationFrame(tick);}tick();
+    let viewDate=new Date();
+    function markToday(done=true){const d=ymd(today()),db=getStore();db[d]=db[d]||{};db[d].done=done;
+      if(note.value.trim())db[d].note=note.value.trim();setStore(db);render();}
+    function saveNote(){const d=ymd(today()),db=getStore();db[d]=db[d]||{};db[d].note=note.value.trim();setStore(db);render();}
+    function calcStreak(){const db=getStore();let c=today(),s=0;while(true){const k=ymd(c);
+      if(db[k]?.done)s++;else break;c=new Date(c);c.setDate(c.getDate()-1);}return s;}
+    function monthTotals(d){const db=getStore(),y=d.getFullYear(),m=d.getMonth();let t=0;
+      for(let day=1;day<=31;day++){const date=new Date(y,m,day);if(date.getMonth()!=m)break;
+        const k=ymd(date);if(db[k]?.done)t++;}return t;}
+    function renderCal(){const y=viewDate.getFullYear(),m=viewDate.getMonth(),f=new Date(y,m,1),
+      l=new Date(y,m+1,0),db=getStore();calTitle.textContent=f.toLocaleDateString('th-TH',{month:'long',year:'numeric'});
+      const dowNames=['จ','อ','พ','พฤ','ศ','ส','อา'];dow.innerHTML=dowNames.map(s=>`<div class="dow">${s}</div>`).join('');
+      const start=(f.getDay()+6)%7;const c=[];for(let i=0;i<start;i++)c.push('<div></div>');
+      for(let day=1;day<=l.getDate();day++){const d=new Date(y,m,day),k=ymd(d),isT=ymd(d)==ymd(today()),
+        done=!!db[k]?.done,n=db[k]?.note||'';c.push(`<div class="day ${done?'done':''} ${isT?'today':''}" data-date="${k}" title="${n}">
+        ${day}${done?'<span class="dot"></span>':''}</div>`);}calendar.innerHTML=c.join('');
+      document.querySelectorAll('.day[data-date]').forEach(e=>e.onclick=()=>{const k=e.dataset.date,db=getStore();
+        db[k]=db[k]||{};db[k].done=!db[k].done;setStore(db);render();});}
+    function renderHeader(){todayLabel.textContent=new Date().toLocaleDateString('th-TH',{weekday:'long',day:'2-digit',month:'short',year:'numeric'});
+      streak.textContent=calcStreak();monthTotal.textContent=monthTotals(new Date());
+      allTotal.textContent=Object.values(getStore()).filter(v=>v.done).length;const db=getStore(),k=ymd(today());
+      note.value=db[k]?.note||'';}
+    function render(){renderHeader();renderCal();}render();
+    prevMonth.onclick=()=>{viewDate.setMonth(viewDate.getMonth()-1);render();};
+    nextMonth.onclick=()=>{viewDate.setMonth(viewDate.getMonth()+1);render();};
+    doneBtn.onclick=()=>markToday(true);undoBtn.onclick=()=>markToday(false);saveNote.onclick=saveNote;
+    exportBtn.onclick=()=>{const b=new Blob([JSON.stringify(getStore(),null,2)],{type:'application/json'});
+      const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='ryu-fitness-backup.json';a.click();};
+    importBtn.onclick=()=>{const f=importFile.files?.[0];if(!f)return alert('เลือกไฟล์ก่อน');
+      const r=new FileReader();r.onload=()=>{setStore(JSON.parse(r.result));render();};r.readAsText(f);}
+  </script>
+</body>
+</html>
