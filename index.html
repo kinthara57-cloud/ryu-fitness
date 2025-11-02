@@ -6,28 +6,34 @@
 <title>Ryu • Fitness Tracker (Xmas Edition)</title>
 <meta name="theme-color" content="#0b0f0f" />
 <style>
-  /* ===== Christmas Theme ===== */
   :root{
     --bg:#0b0f0f; --panel:#101616; --text:#f6fbfa; --muted:#b7c9c3;
     --green:#2ecc71; --red:#ff5c5c; --gold:#ffd66b; --border:#1f2c2a;
   }
   *{box-sizing:border-box}
-  body{margin:0;font-family:system-ui,Inter,Segoe UI,Roboto,Arial,sans-serif;color:var(--text);
-       background:
-        radial-gradient(1200px 500px at 10% -10%, #14302255, transparent 60%),
-        radial-gradient(900px 400px at 100% 0%, #1a232055, transparent 60%),
-        var(--bg);
-       overflow-x:hidden}
+  body{
+    margin:0;
+    font-family:system-ui,Inter,Segoe UI,Roboto,Arial,sans-serif;
+    color:var(--text);
+    background:
+      radial-gradient(1200px 500px at 10% -10%, #14302255, transparent 60%),
+      radial-gradient(900px 400px at 100% 0%, #1a232055, transparent 60%),
+      var(--bg);
+    overflow-x:hidden;
+  }
   .wrap{max-width:1000px;margin:auto;padding:22px}
   .banner{
     display:flex;gap:12px;align-items:center;justify-content:center;
     background:linear-gradient(90deg,#1a2f1f,#241b1b);
-    border:1px solid var(--border); border-radius:16px; padding:12px; margin-bottom:14px;
+    border:1px solid var(--border);
+    border-radius:16px;
+    padding:12px;margin-bottom:14px;
     box-shadow:0 10px 30px rgba(0,0,0,.35)
   }
   .banner h1{margin:0;font-size:26px;letter-spacing:.3px}
   .badge{background:#13201c;border:1px solid var(--border);padding:6px 10px;border-radius:999px}
-  .grid{display:grid;gap:16px} @media(min-width:900px){.grid{grid-template-columns:1.2fr .8fr}}
+  .grid{display:grid;gap:16px}
+  @media(min-width:900px){.grid{grid-template-columns:1.2fr .8fr}}
   .card{background:linear-gradient(180deg,#101717,#0e1414);border:1px solid var(--border);border-radius:16px;padding:16px}
   .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
   button{border:1px solid #23302e;background:#101717;color:var(--text);padding:9px 13px;border-radius:10px;cursor:pointer}
@@ -44,10 +50,8 @@
   .day.today{outline:2px solid rgba(124,192,255,.35)}
   .day.done{background:linear-gradient(180deg,#0f271c,#0f1b15);color:#bff6dc;border-style:solid}
   .day.miss{background:linear-gradient(180deg,#2a1414,#1a0f10);color:#ffd1d1;border-style:solid}
-  /* Snow */
   .snow{pointer-events:none;position:fixed;inset:0;overflow:hidden}
-  .flake{position:absolute;top:-10px;width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.85);
-         box-shadow:0 0 6px 2px rgba(255,255,255,.25)}
+  .flake{position:absolute;top:-10px;width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.85);box-shadow:0 0 6px 2px rgba(255,255,255,.25)}
   .xmas-divider{height:1px;background:linear-gradient(90deg,transparent,var(--red),var(--gold),var(--green),transparent);opacity:.6;margin:12px 0}
 </style>
 </head>
@@ -90,7 +94,7 @@
 
     <!-- RIGHT -->
     <aside class="card">
-      <h3 style="margin:0 0 8px">ท่าออกกำลังกายวันนี้</h3>
+      <h3>ท่าออกกำลังกายวันนี้</h3>
       <div id="rows"></div>
       <div class="row" style="margin-top:8px">
         <input id="exName" placeholder="ชื่อท่า เช่น วิดพื้น"/>
@@ -101,9 +105,12 @@
 
       <div class="xmas-divider"></div>
 
-      <h3 style="margin:0 0 8px">นับถอยหลัง 🎄 คริสต์มาส & 🎆 ปีใหม่</h3>
+      <h3>นับถอยหลัง 🎄 คริสต์มาส & 🎆 ปีใหม่</h3>
       <div class="row">
         <div class="pill">คริสต์มาส: <b id="xd">0</b> วัน <b id="xh">0</b> ชม. <b id="xm">0</b> นาที <b id="xs">0</b> วิ</div>
+      </div>
+      <div class="row" style="margin-top:8px">
+        <div class="pill">ปีใหม่: <b id="d">0</b> วัน <b id="h">0</b> ชม. <b id="m">0</b> นาที <b id="s">0</b> วิ</div>
       </div>
 
       <div class="xmas-divider"></div>
@@ -116,7 +123,6 @@
 <div class="snow" id="snow"></div>
 
 <script>
-/* ====== State & Utils ====== */
 const KEY='ryu_ft_xmas_v1';
 const pad=n=>String(n).padStart(2,'0');
 const fmt=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
@@ -126,15 +132,17 @@ const load=()=>JSON.parse(localStorage.getItem(KEY)||'{"marks":{},"exercises":[{
 const save=()=>localStorage.setItem(KEY,JSON.stringify(state));
 let state=load();
 
-/* ====== Countdowns ====== */
+/* ===== Countdowns ===== */
 const xmasTarget = new Date(`${new Date().getFullYear()}-12-25T00:00:00`);
 const newYearTarget = new Date(`${new Date().getFullYear()+1}-01-01T00:00:00`);
 function tickCountdowns(){
   const now=new Date();
   function set(elD,elH,elM,elS,target){
     let ms=target-now; if(ms<0) ms=0;
-    const s=Math.floor(ms/1000), d=Math.floor(s/86400), h=Math.floor((s%86400)/3600),
-          m=Math.floor((s%3600)/60), sc=s%60;
+    const s=Math.floor(ms/1000), d=Math.floor(s/86400),
+          h=Math.floor((s%86400)/3600),
+          m=Math.floor((s%3600)/60),
+          sc=s%60;
     elD.textContent=d; elH.textContent=h; elM.textContent=m; elS.textContent=sc;
   }
   set(xd,xh,xm,xs,xmasTarget);
@@ -143,7 +151,7 @@ function tickCountdowns(){
 }
 tickCountdowns();
 
-/* ====== Calendar ====== */
+/* ===== Calendar ===== */
 function setMark(id,val,rerender=true){ if(val===0) delete state.marks[id]; else state.marks[id]=val; save(); if(rerender){renderCal();updateStats();}}
 function cycle(id){ const cur=state.marks[id]||0; const next=cur===1?-1:cur===-1?0:1; setMark(id,next); }
 
@@ -151,9 +159,7 @@ function renderCal(){
   const y=view.getFullYear(), m=view.getMonth();
   titleMonth.textContent=new Date(y,m,1).toLocaleDateString('th-TH',{month:'long',year:'numeric'});
   todayLbl.textContent=new Date().toLocaleDateString('th-TH',{weekday:'long',day:'2-digit',month:'short',year:'numeric'});
-
   const dows=['จ','อ','พ','พฤ','ศ','ส','อา']; dow.innerHTML=dows.map(s=>`<div class="dow">${s}</div>`).join('');
-
   const first=new Date(y,m,1), last=new Date(y,m+1,0);
   const start=(first.getDay()+6)%7;
   calGrid.innerHTML='';
@@ -163,7 +169,6 @@ function renderCal(){
     const cell=document.createElement('div');
     cell.className='day' + (fmt(d)===fmt(today)?' today':'') + (v===1?' done':'') + (v===-1?' miss':'');
     cell.textContent = day + (v===1?' ✅': v===-1?' ❌':'');
-    cell.title = (v===1?'ทำแล้ว': v===-1?'พลาด':'ยังไม่ทำ');
     cell.onclick = ()=>cycle(id);
     calGrid.appendChild(cell);
   }
@@ -178,15 +183,15 @@ function updateStats(){
   statStreak.textContent=streak+' วัน';
 }
 
-/* ====== Exercises ====== */
+/* ===== Exercises ===== */
 function renderExercises(){
   rows.innerHTML='';
   state.exercises.forEach((ex,i)=>{
     const row=document.createElement('div'); row.className='row';
     row.innerHTML=`
-      <input value="${ex.name}" aria-label="ชื่อท่า"/>
-      <input class="qty" type="number" min="1" value="${ex.qty}" aria-label="จำนวน"/>
-      <input class="qty" value="${ex.unit}" aria-label="หน่วย"/>
+      <input value="${ex.name}" />
+      <input class="qty" type="number" min="1" value="${ex.qty}" />
+      <input class="qty" value="${ex.unit}" />
       <button data-act="tick" class="ok">ติ๊กวันนี้</button>
       <button data-act="del" class="bad">ลบ</button>`;
     const [name,qty,unit]=row.querySelectorAll('input');
@@ -224,7 +229,7 @@ exportCsv.onclick=()=>{
   const a=document.createElement('a'); a.href=url; a.download='workout_ryu.csv'; a.click(); URL.revokeObjectURL(url);
 };
 
-/* ====== Nav & Boot ====== */
+/* ===== Boot ===== */
 btnTodayDone.onclick = ()=> setMark(fmt(today),1);
 btnTodayMiss.onclick = ()=> setMark(fmt(today),-1);
 btnClearToday.onclick = ()=> setMark(fmt(today),0);
@@ -235,10 +240,10 @@ next.onclick=()=>{view.setMonth(view.getMonth()+1); renderCal(); updateStats();}
   renderCal(); renderExercises(); updateStats();
 })();
 
-/* ====== Snowflakes ====== */
+/* ===== Snowflakes ===== */
 (function snow(){
   const box=document.getElementById('snow');
-  const W=window.innerWidth, H=window.innerHeight;
+  const W=window.innerWidth;
   for(let i=0;i<80;i++){
     const f=document.createElement('div'); f.className='flake';
     const size=Math.random()*3+2;
@@ -257,4 +262,3 @@ next.onclick=()=>{view.setMonth(view.getMonth()+1); renderCal(); updateStats();}
 </style>
 </body>
 </html>
-
