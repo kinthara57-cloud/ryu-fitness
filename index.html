@@ -3,33 +3,61 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Ryu • Fitness Tracker + Countdown</title>
+<title>Ryu • Fitness Tracker (Xmas Edition)</title>
+<meta name="theme-color" content="#0b0f0f" />
 <style>
-  :root{--bg:#0b0f10;--panel:#12181b;--text:#eaf2f4;--muted:#8aa0ac;--ok:#37d67a;--bad:#ff6b6b}
-  *{box-sizing:border-box} body{margin:0;font-family:system-ui,Inter,Segoe UI,Roboto,Arial,sans-serif;color:var(--text);background:#0b0f10}
-  .wrap{max-width:980px;margin:auto;padding:20px}
+  /* ===== Christmas Theme ===== */
+  :root{
+    --bg:#0b0f0f; --panel:#101616; --text:#f6fbfa; --muted:#b7c9c3;
+    --green:#2ecc71; --red:#ff5c5c; --gold:#ffd66b; --border:#1f2c2a;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,Inter,Segoe UI,Roboto,Arial,sans-serif;color:var(--text);
+       background:
+        radial-gradient(1200px 500px at 10% -10%, #14302255, transparent 60%),
+        radial-gradient(900px 400px at 100% 0%, #1a232055, transparent 60%),
+        var(--bg);
+       overflow-x:hidden}
+  .wrap{max-width:1000px;margin:auto;padding:22px}
+  .banner{
+    display:flex;gap:12px;align-items:center;justify-content:center;
+    background:linear-gradient(90deg,#1a2f1f,#241b1b);
+    border:1px solid var(--border); border-radius:16px; padding:12px; margin-bottom:14px;
+    box-shadow:0 10px 30px rgba(0,0,0,.35)
+  }
+  .banner h1{margin:0;font-size:26px;letter-spacing:.3px}
+  .badge{background:#13201c;border:1px solid var(--border);padding:6px 10px;border-radius:999px}
   .grid{display:grid;gap:16px} @media(min-width:900px){.grid{grid-template-columns:1.2fr .8fr}}
-  .card{background:#11181c;border:1px solid #1c2a31;border-radius:14px;padding:16px}
-  h1{margin:0 0 12px}
-  .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-  .pill{background:#0f1518;border:1px solid #22323a;border-radius:10px;padding:6px 10px}
-  button{border:1px solid #22323a;background:#0f1518;color:var(--text);padding:8px 12px;border-radius:10px;cursor:pointer}
-  button.bad{color:#ffb3b3;border-color:#3a2222}
-  input,select{background:#0f1518;border:1px solid #22323a;color:var(--text);padding:8px 10px;border-radius:10px}
+  .card{background:linear-gradient(180deg,#101717,#0e1414);border:1px solid var(--border);border-radius:16px;padding:16px}
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  button{border:1px solid #23302e;background:#101717;color:var(--text);padding:9px 13px;border-radius:10px;cursor:pointer}
+  button.ok{background:linear-gradient(90deg,#1f8e54,#25a064);border-color:transparent}
+  button.bad{color:#ffc3c3;border-color:#3a2222;background:#171112}
+  input{background:#101717;border:1px solid #23302e;color:var(--text);padding:9px 11px;border-radius:10px}
   input.qty{width:90px}
+  .stat{display:grid;grid-template-columns:auto 1fr;gap:6px 10px;margin:8px 0}
+  .pill{background:#101717;border:1px solid #23302e;border-radius:10px;padding:6px 10px}
   .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-top:10px}
   .dow,.day{display:flex;align-items:center;justify-content:center;min-height:44px;border-radius:10px}
-  .dow{background:#0e1417;border:1px solid #22323a;color:#9bb2bf;font-weight:700}
-  .day{background:#0e1417;border:1px dashed #22323a;cursor:pointer;position:relative}
+  .dow{background:#0f1716;border:1px solid #23302e;color:#a7bab5;font-weight:700}
+  .day{background:#0f1716;border:1px dashed #23302e;cursor:pointer;position:relative}
   .day.today{outline:2px solid rgba(124,192,255,.35)}
-  .day.done{background:linear-gradient(180deg,#0f231e,#0e1a16);color:#bff6dc;border-style:solid}
-  .day.miss{background:linear-gradient(180deg,#241213,#1a0f10);color:#ffd1d1;border-style:solid}
-  .stat{display:grid;grid-template-columns:auto 1fr;gap:6px 10px;margin:8px 0}
+  .day.done{background:linear-gradient(180deg,#0f271c,#0f1b15);color:#bff6dc;border-style:solid}
+  .day.miss{background:linear-gradient(180deg,#2a1414,#1a0f10);color:#ffd1d1;border-style:solid}
+  /* Snow */
+  .snow{pointer-events:none;position:fixed;inset:0;overflow:hidden}
+  .flake{position:absolute;top:-10px;width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.85);
+         box-shadow:0 0 6px 2px rgba(255,255,255,.25)}
+  .xmas-divider{height:1px;background:linear-gradient(90deg,transparent,var(--red),var(--gold),var(--green),transparent);opacity:.6;margin:12px 0}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <h1>Ryu Fitness Tracker <span style="color:#8aa0ac">• ปฏิทิน • ท่าออกกำลังกาย • นับถอยหลังปีใหม่</span></h1>
+  <div class="banner">
+    <span class="badge">🎁</span>
+    <h1>สุขสันต์วันคริสต์มาส 🎄 | Ryu Fitness Tracker</h1>
+    <span class="badge">⭐</span>
+  </div>
 
   <div class="grid">
     <!-- LEFT -->
@@ -53,11 +81,11 @@
       <div class="cal-grid" id="calGrid"></div>
 
       <div class="row" style="margin-top:10px">
-        <button id="btnTodayDone">ติ๊กวันนี้ ✅</button>
+        <button id="btnTodayDone" class="ok">ติ๊กวันนี้ ✅</button>
         <button id="btnTodayMiss" class="bad">ติ๊กพลาดวันนี้ ❌</button>
         <button id="btnClearToday">ล้างสถานะวันนี้</button>
       </div>
-      <p class="pill" style="margin-top:8px">กดที่วันในปฏิทินเพื่อวนสถานะ: ว่าง → ✅ ทำ → ❌ พลาด → ว่าง</p>
+      <p class="pill" style="margin-top:8px">กดวันเพื่อวนสถานะ: ว่าง → ✅ ทำ → ❌ พลาด → ว่าง</p>
     </section>
 
     <!-- RIGHT -->
@@ -68,29 +96,29 @@
         <input id="exName" placeholder="ชื่อท่า เช่น วิดพื้น"/>
         <input id="exQty" class="qty" type="number" min="1" value="10"/>
         <input id="exUnit" class="qty" value="ครั้ง"/>
-        <button id="addEx">เพิ่มท่า</button>
+        <button id="addEx" class="ok">เพิ่มท่า</button>
       </div>
 
-      <hr style="border:0;border-top:1px solid #22323a;margin:12px 0">
+      <div class="xmas-divider"></div>
+
+      <h3 style="margin:0 0 8px">นับถอยหลัง 🎄 คริสต์มาส & 🎆 ปีใหม่</h3>
       <div class="row">
-        <button id="exportCsv">Export CSV</button>
+        <div class="pill">คริสต์มาส: <b id="xd">0</b> วัน <b id="xh">0</b> ชม. <b id="xm">0</b> นาที <b id="xs">0</b> วิ</div>
+        <div class="pill">ปีใหม่: <b id="d">0</b> วัน <b id="h">0</b> ชม. <b id="m">0</b> นาที <b id="s">0</b> วิ</div>
       </div>
 
-      <hr style="border:0;border-top:1px solid #22323a;margin:12px 0">
-      <h3 style="margin:0 0 8px">นับถอยหลังปีใหม่</h3>
-      <div class="row">
-        <div class="pill"><b id="d">0</b> วัน</div>
-        <div class="pill"><b id="h">0</b> ชม.</div>
-        <div class="pill"><b id="m">0</b> นาที</div>
-        <div class="pill"><b id="s">0</b> วิ</div>
-      </div>
+      <div class="xmas-divider"></div>
+      <button id="exportCsv">Export CSV</button>
     </aside>
   </div>
 </div>
 
+<!-- Snow layer -->
+<div class="snow" id="snow"></div>
+
 <script>
-/* ========= State & Utils ========= */
-const KEY='ryu_ft_v2';
+/* ====== State & Utils ====== */
+const KEY='ryu_ft_xmas_v1';
 const pad=n=>String(n).padStart(2,'0');
 const fmt=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
 const today=new Date(new Date().toDateString());
@@ -99,29 +127,33 @@ const load=()=>JSON.parse(localStorage.getItem(KEY)||'{"marks":{},"exercises":[{
 const save=()=>localStorage.setItem(KEY,JSON.stringify(state));
 let state=load();
 
-/* ========= Countdown ========= */
-const target=new Date('2026-01-01T00:00:00');
-(function tick(){const n=new Date(); let ms=target-n; if(ms<0)ms=0;
- const s=Math.floor(ms/1000), dd=Math.floor(s/86400), hh=Math.floor((s%86400)/3600), mm=Math.floor((s%3600)/60), ss=s%60;
- d.textContent=dd; h.textContent=hh; m.textContent=mm; s.textContent=ss; requestAnimationFrame(tick);})();
+/* ====== Countdowns ====== */
+const xmasTarget = new Date(`${new Date().getFullYear()}-12-25T00:00:00`);
+const newYearTarget = new Date(`${new Date().getFullYear()+1}-01-01T00:00:00`);
+function tickCountdowns(){
+  const now=new Date();
+  function set(elD,elH,elM,elS,target){
+    let ms=target-now; if(ms<0) ms=0;
+    const s=Math.floor(ms/1000), d=Math.floor(s/86400), h=Math.floor((s%86400)/3600),
+          m=Math.floor((s%3600)/60), sc=s%60;
+    elD.textContent=d; elH.textContent=h; elM.textContent=m; elS.textContent=sc;
+  }
+  set(xd,xh,xm,xs,xmasTarget);
+  set(d,h,m,s,newYearTarget);
+  requestAnimationFrame(tickCountdowns);
+}
+tickCountdowns();
 
-/* ========= Calendar ========= */
-function setMark(id, val, rerender=true){
-  if(val===0) delete state.marks[id]; else state.marks[id]=val;
-  save(); if(rerender){ renderCal(); updateStats(); }
-}
-function cycle(id){
-  const cur=state.marks[id]||0;
-  const next = cur===1 ? -1 : cur===-1 ? 0 : 1; // none->done->miss->none
-  setMark(id,next);
-}
+/* ====== Calendar ====== */
+function setMark(id,val,rerender=true){ if(val===0) delete state.marks[id]; else state.marks[id]=val; save(); if(rerender){renderCal();updateStats();}}
+function cycle(id){ const cur=state.marks[id]||0; const next=cur===1?-1:cur===-1?0:1; setMark(id,next); }
+
 function renderCal(){
   const y=view.getFullYear(), m=view.getMonth();
   titleMonth.textContent=new Date(y,m,1).toLocaleDateString('th-TH',{month:'long',year:'numeric'});
   todayLbl.textContent=new Date().toLocaleDateString('th-TH',{weekday:'long',day:'2-digit',month:'short',year:'numeric'});
 
-  const dowNames=['จ','อ','พ','พฤ','ศ','ส','อา'];
-  dow.innerHTML=dowNames.map(s=>`<div class="dow">${s}</div>`).join('');
+  const dows=['จ','อ','พ','พฤ','ศ','ส','อา']; dow.innerHTML=dows.map(s=>`<div class="dow">${s}</div>`).join('');
 
   const first=new Date(y,m,1), last=new Date(y,m+1,0);
   const start=(first.getDay()+6)%7;
@@ -143,12 +175,11 @@ function updateStats(){
   statMonth.textContent=monthDone+' วัน';
   const allDone=Object.values(state.marks).filter(v=>v===1).length;
   statAll.textContent=allDone+' วัน';
-  let d=new Date(today), streak=0;
-  while((state.marks[fmt(d)]||0)===1){ streak++; d.setDate(d.getDate()-1); }
+  let d=new Date(today), streak=0; while((state.marks[fmt(d)]||0)===1){ streak++; d.setDate(d.getDate()-1); }
   statStreak.textContent=streak+' วัน';
 }
 
-/* ========= Exercises ========= */
+/* ====== Exercises ====== */
 function renderExercises(){
   rows.innerHTML='';
   state.exercises.forEach((ex,i)=>{
@@ -157,7 +188,7 @@ function renderExercises(){
       <input value="${ex.name}" aria-label="ชื่อท่า"/>
       <input class="qty" type="number" min="1" value="${ex.qty}" aria-label="จำนวน"/>
       <input class="qty" value="${ex.unit}" aria-label="หน่วย"/>
-      <button data-act="tick">ติ๊กวันนี้</button>
+      <button data-act="tick" class="ok">ติ๊กวันนี้</button>
       <button data-act="del" class="bad">ลบ</button>`;
     const [name,qty,unit]=row.querySelectorAll('input');
     name.onchange=()=>{ex.name=name.value; save();};
@@ -194,18 +225,37 @@ exportCsv.onclick=()=>{
   const a=document.createElement('a'); a.href=url; a.download='workout_ryu.csv'; a.click(); URL.revokeObjectURL(url);
 };
 
-/* ========= Today buttons ========= */
+/* ====== Nav & Boot ====== */
 btnTodayDone.onclick = ()=> setMark(fmt(today),1);
 btnTodayMiss.onclick = ()=> setMark(fmt(today),-1);
 btnClearToday.onclick = ()=> setMark(fmt(today),0);
 prev.onclick=()=>{view.setMonth(view.getMonth()-1); renderCal(); updateStats();};
 next.onclick=()=>{view.setMonth(view.getMonth()+1); renderCal(); updateStats();};
-
-/* ========= Boot ========= */
 (function init(){
   const dows=['จ','อ','พ','พฤ','ศ','ส','อา']; dow.innerHTML=dows.map(s=>`<div class="dow">${s}</div>`).join('');
   renderCal(); renderExercises(); updateStats();
 })();
+
+/* ====== Snowflakes ====== */
+(function snow(){
+  const box=document.getElementById('snow');
+  const W=window.innerWidth, H=window.innerHeight;
+  for(let i=0;i<80;i++){
+    const f=document.createElement('div'); f.className='flake';
+    const size=Math.random()*3+2;
+    f.style.width=f.style.height=size+'px';
+    f.style.left=Math.random()*W+'px';
+    f.style.animation=`fall ${6+Math.random()*8}s linear ${Math.random()*6}s infinite`;
+    box.appendChild(f);
+  }
+})();
 </script>
+<style>
+@keyframes fall{
+  0%{transform:translateY(-10px)}
+  100%{transform:translateY(110vh)}
+}
+</style>
 </body>
 </html>
+
