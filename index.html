@@ -123,7 +123,7 @@
 <div class="snow" id="snow"></div>
 
 <script>
-const KEY='ryu_ft_newyear_v2';
+const KEY='ryu_ft_newyear_v3';
 const pad=n=>String(n).padStart(2,'0');
 const fmt=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
 const today=new Date(new Date().toDateString());
@@ -132,7 +132,7 @@ const load=()=>JSON.parse(localStorage.getItem(KEY)||'{"marks":{},"exercises":[{
 const save=()=>localStorage.setItem(KEY,JSON.stringify(state));
 let state=load();
 
-/* Countdown to New Year */
+/* Countdown */
 const target = new Date(`${new Date().getFullYear()+1}-01-01T00:00:00`);
 function tickCountdown(){
   const now=new Date();
@@ -150,10 +150,16 @@ function tickCountdown(){
 }
 tickCountdown();
 
-/* Calendar + Tracker */
-function setMark(id,val,rerender=true){ if(val===0) delete state.marks[id]; else state.marks[id]=val; save(); if(rerender){renderCal();updateStats();}}
-function cycle(id){ const cur=state.marks[id]||0; const next=cur===1?-1:cur===-1?0:1; setMark(id,next); }
-
+/* Calendar */
+function setMark(id,val){
+  if(val===0) delete state.marks[id]; else state.marks[id]=val;
+  save(); renderCal(); updateStats();
+}
+function cycle(id){
+  const cur=state.marks[id]||0;
+  const next=cur===1?-1:cur===-1?0:1;
+  setMark(id,next);
+}
 function renderCal(){
   const y=view.getFullYear(), m=view.getMonth();
   titleMonth.textContent=new Date(y,m,1).toLocaleDateString('th-TH',{month:'long',year:'numeric'});
@@ -202,7 +208,7 @@ function renderExercises(){
       const snap=state.marks[id+':ex']||[];
       const f=snap.find(s=>s.name===ex.name);
       if(f){f.qty=ex.qty; f.unit=ex.unit;} else snap.push({name:ex.name,qty:ex.qty,unit:ex.unit});
-      state.marks[id+':ex']=snap; setMark(id,1,false); save(); renderCal(); updateStats();
+      state.marks[id+':ex']=snap; setMark(id,1);
     };
     row.querySelector('[data-act="del"]').onclick=()=>{
       if(confirm('ลบท่านี้?')){ state.exercises.splice(i,1); save(); renderExercises(); }
@@ -228,17 +234,19 @@ exportCsv.onclick=()=>{
   const a=document.createElement('a'); a.href=url; a.download='workout_ryu.csv'; a.click(); URL.revokeObjectURL(url);
 };
 
-/* Boot + Snow */
+/* Boot + Buttons */
 btnTodayDone.onclick = ()=> setMark(fmt(today),1);
 btnTodayMiss.onclick = ()=> setMark(fmt(today),-1);
-btnClearToday.onclick = ()=> setMark(fmt(today),0);
+btnClearToday.onclick = ()=> setMark(fmt(today),0); // ✅ แก้แล้ว: ใช้งานได้จริง
 prev.onclick=()=>{view.setMonth(view.getMonth()-1); renderCal(); updateStats();};
 next.onclick=()=>{view.setMonth(view.getMonth()+1); renderCal(); updateStats();};
+
 (function init(){
   const dows=['จ','อ','พ','พฤ','ศ','ส','อา']; dow.innerHTML=dows.map(s=>`<div class="dow">${s}</div>`).join('');
   renderCal(); renderExercises(); updateStats();
 })();
 
+/* Snow effect */
 (function snow(){
   const box=document.getElementById('snow');
   const W=window.innerWidth;
@@ -260,4 +268,3 @@ next.onclick=()=>{view.setMonth(view.getMonth()+1); renderCal(); updateStats();}
 </style>
 </body>
 </html>
-
