@@ -1,167 +1,211 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Ryu • Fitness Tracker + New Year Countdown</title>
-  <meta name="theme-color" content="#0a0f0b" />
-  <style>
-    :root{
-      --bg:#0b0f10; --panel:#12181b; --muted:#6b7b85; --text:#eaf2f4;
-      --primary:#35d0a7; --accent:#7cc0ff; --danger:#ff6b6b; --ok:#37d67a;
-      --ring: 0 0 0 .2rem rgba(53,208,167,.35);
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;
-      color:var(--text); background:radial-gradient(1200px 600px at 20% -10%, #142026 0%, transparent 60%),
-                       radial-gradient(900px 400px at 100% 0%, #0e1a26 0%, transparent 60%), var(--bg);
-    }
-    .wrap{max-width:980px;margin:auto;padding:24px}
-    .grid{display:grid; gap:16px}
-    @media(min-width:900px){ .grid{ grid-template-columns: 1.2fr .8fr } }
-
-    .card{
-      background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
-      border:1px solid rgba(255,255,255,.08); border-radius:16px; padding:18px;
-      box-shadow: 0 8px 30px rgba(0,0,0,.35);
-      backdrop-filter: blur(6px);
-    }
-    h1{font-size:28px;margin:0 0 8px}
-    .muted{color:var(--muted)}
-    .row{display:flex; gap:12px; align-items:center; flex-wrap:wrap}
-    .btn{
-      border:1px solid rgba(255,255,255,.1); background:#0f1518; color:var(--text);
-      padding:10px 14px; border-radius:12px; cursor:pointer; font-weight:600;
-      transition:.15s; user-select:none;
-    }
-    .btn:hover{ transform:translateY(-1px); box-shadow:var(--ring) }
-    .btn.ok{ background:linear-gradient(90deg,#1f9d7c,#1fb18a); border-color:transparent }
-    .btn.warn{ background:#1b2023; color:#ffb3b3; border-color:#2a1717 }
-    .stat{display:grid; grid-template-columns:auto 1fr; gap:8px 12px; align-items:center;}
-    .stat .val{font-size:26px; font-weight:800}
-    .timer{display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-top:8px}
-    .pill{background:#0d1417;border:1px solid rgba(255,255,255,.08); padding:8px 12px; border-radius:10px}
-    .big{font-size:22px; font-weight:800}
-    .cal{margin-top:12px}
-    .cal-grid{display:grid; grid-template-columns:repeat(7,1fr); gap:8px}
-    .day, .dow{text-align:center; padding:10px 0; border-radius:10px; border:1px dashed rgba(255,255,255,.08);
-      background:#0e1417; min-height:44px; display:flex; align-items:center; justify-content:center;}
-    .dow{border-style:solid; background:#0c1215; color:#9cb0ba; font-weight:700}
-    .day.done{ background:linear-gradient(180deg,#0f231e,#0e1a16); border-color:#1d5; color:#bff6dc; position:relative }
-    .day.today{ outline:2px solid rgba(124,192,255,.4) }
-    .day .dot{width:8px; height:8px; border-radius:50%; background:var(--ok); position:absolute; top:6px; right:6px}
-    input[type="text"], textarea{
-      width:100%; background:#0f1518; border:1px solid rgba(255,255,255,.1);
-      color:var(--text); padding:10px 12px; border-radius:10px; outline:none
-    }
-    input[type="text"]:focus, textarea:focus{ box-shadow:var(--ring) }
-    .foot{margin-top:18px; font-size:13px; color:#97a7af}
-    .link{color:#7cc0ff; text-decoration:none}
-    .flex{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
-    .grow{flex:1}
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Ryu • Fitness Tracker + Countdown</title>
+<style>
+  :root{--bg:#0b0f10;--panel:#12181b;--text:#eaf2f4;--muted:#8aa0ac;--ok:#37d67a;--bad:#ff6b6b}
+  *{box-sizing:border-box} body{margin:0;font-family:system-ui,Inter,Segoe UI,Roboto,Arial,sans-serif;color:var(--text);background:#0b0f10}
+  .wrap{max-width:980px;margin:auto;padding:20px}
+  .grid{display:grid;gap:16px} @media(min-width:900px){.grid{grid-template-columns:1.2fr .8fr}}
+  .card{background:#11181c;border:1px solid #1c2a31;border-radius:14px;padding:16px}
+  h1{margin:0 0 12px}
+  .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .pill{background:#0f1518;border:1px solid #22323a;border-radius:10px;padding:6px 10px}
+  button{border:1px solid #22323a;background:#0f1518;color:var(--text);padding:8px 12px;border-radius:10px;cursor:pointer}
+  button.bad{color:#ffb3b3;border-color:#3a2222}
+  input,select{background:#0f1518;border:1px solid #22323a;color:var(--text);padding:8px 10px;border-radius:10px}
+  input.qty{width:90px}
+  .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-top:10px}
+  .dow,.day{display:flex;align-items:center;justify-content:center;min-height:44px;border-radius:10px}
+  .dow{background:#0e1417;border:1px solid #22323a;color:#9bb2bf;font-weight:700}
+  .day{background:#0e1417;border:1px dashed #22323a;cursor:pointer;position:relative}
+  .day.today{outline:2px solid rgba(124,192,255,.35)}
+  .day.done{background:linear-gradient(180deg,#0f231e,#0e1a16);color:#bff6dc;border-style:solid}
+  .day.miss{background:linear-gradient(180deg,#241213,#1a0f10);color:#ffd1d1;border-style:solid}
+  .stat{display:grid;grid-template-columns:auto 1fr;gap:6px 10px;margin:8px 0}
+</style>
 </head>
 <body>
-  <div class="wrap">
-    <h1>Ryu Fitness Tracker <span class="muted">• บันทึกวันนี้ และนับถอยหลังปีใหม่</span></h1>
+<div class="wrap">
+  <h1>Ryu Fitness Tracker <span style="color:#8aa0ac">• ปฏิทิน • ท่าออกกำลังกาย • นับถอยหลังปีใหม่</span></h1>
 
-    <div class="grid">
-      <section class="card">
-        <h2 style="margin:0 0 6px">วันนี้มึงออกกำลังกายยัง?</h2>
+  <div class="grid">
+    <!-- LEFT -->
+    <section class="card">
+      <div class="row" style="justify-content:space-between">
         <div class="row">
-          <button id="doneBtn" class="btn ok">ทำแล้ว ✓</button>
-          <button id="undoBtn" class="btn warn">ยกเลิกวันนี้</button>
-          <div class="pill" id="todayLabel"></div>
+          <button id="prev">‹</button>
+          <div class="pill" id="titleMonth">เดือนนี้</div>
+          <button id="next">›</button>
         </div>
-        <div style="height:8px"></div>
-        <div class="stat">
-          <div>สตรีคปัจจุบัน</div><div class="val" id="streak">0</div>
-          <div>รวมเดือนนี้</div><div class="val" id="monthTotal">0</div>
-          <div>รวมทั้งหมด</div><div class="val" id="allTotal">0</div>
-        </div>
-        <div class="cal">
-          <div class="row" style="justify-content:space-between">
-            <div class="row">
-              <button class="btn" id="prevMonth">‹</button>
-              <div class="pill" id="calTitle">เดือนนี้</div>
-              <button class="btn" id="nextMonth">›</button>
-            </div>
-            <div class="flex">
-              <input id="note" class="grow" placeholder="โน้ตวันนี้ (เช่น 'วิ่ง 20 นาที, วิดพื้น 30')" />
-              <button class="btn" id="saveNote">บันทึกโน้ต</button>
-            </div>
-          </div>
-          <div class="cal-grid" id="dow"></div>
-          <div class="cal-grid" id="calendar"></div>
-        </div>
-      </section>
+        <div class="pill" id="todayLbl"></div>
+      </div>
 
-      <aside class="card">
-        <h2 style="margin:0 0 6px">นับถอยหลังสู่ปีใหม่</h2>
-        <div class="timer" id="countdown">
-          <div class="pill"><span class="big" id="dd">0</span> วัน</div>
-          <div class="pill"><span class="big" id="hh">0</span> ชม.</div>
-          <div class="pill"><span class="big" id="mm">0</span> นาที</div>
-          <div class="pill"><span class="big" id="ss">0</span> วิ</div>
-        </div>
-        <div style="height:16px"></div>
-        <h3 style="margin:0 0 8px">สำรอง/ย้ายข้อมูล</h3>
-        <div class="flex">
-          <button class="btn" id="exportBtn">Export JSON</button>
-          <input type="file" id="importFile" accept="application/json" />
-          <button class="btn" id="importBtn">Import</button>
-        </div>
-        <p class="foot">เก็บข้อมูลไว้ในเบราว์เซอร์ ไม่ต้องสมัครบัญชี ถ้าเปลี่ยนเครื่องใช้ปุ่ม Export/Import ย้ายข้อมูลได้</p>
-      </aside>
-    </div>
+      <div class="stat">
+        <div>สตรีค</div><div id="statStreak">0 วัน</div>
+        <div>รวมเดือนนี้</div><div id="statMonth">0 วัน</div>
+        <div>รวมทั้งหมด</div><div id="statAll">0 วัน</div>
+      </div>
 
-    <p class="foot">© ริว | Fitness Tracker for 2025</p>
+      <div class="cal-grid" id="dow"></div>
+      <div class="cal-grid" id="calGrid"></div>
+
+      <div class="row" style="margin-top:10px">
+        <button id="btnTodayDone">ติ๊กวันนี้ ✅</button>
+        <button id="btnTodayMiss" class="bad">ติ๊กพลาดวันนี้ ❌</button>
+        <button id="btnClearToday">ล้างสถานะวันนี้</button>
+      </div>
+      <p class="pill" style="margin-top:8px">กดที่วันในปฏิทินเพื่อวนสถานะ: ว่าง → ✅ ทำ → ❌ พลาด → ว่าง</p>
+    </section>
+
+    <!-- RIGHT -->
+    <aside class="card">
+      <h3 style="margin:0 0 8px">ท่าออกกำลังกายวันนี้</h3>
+      <div id="rows"></div>
+      <div class="row" style="margin-top:8px">
+        <input id="exName" placeholder="ชื่อท่า เช่น วิดพื้น"/>
+        <input id="exQty" class="qty" type="number" min="1" value="10"/>
+        <input id="exUnit" class="qty" value="ครั้ง"/>
+        <button id="addEx">เพิ่มท่า</button>
+      </div>
+
+      <hr style="border:0;border-top:1px solid #22323a;margin:12px 0">
+      <div class="row">
+        <button id="exportCsv">Export CSV</button>
+      </div>
+
+      <hr style="border:0;border-top:1px solid #22323a;margin:12px 0">
+      <h3 style="margin:0 0 8px">นับถอยหลังปีใหม่</h3>
+      <div class="row">
+        <div class="pill"><b id="d">0</b> วัน</div>
+        <div class="pill"><b id="h">0</b> ชม.</div>
+        <div class="pill"><b id="m">0</b> นาที</div>
+        <div class="pill"><b id="s">0</b> วิ</div>
+      </div>
+    </aside>
   </div>
+</div>
 
-  <script>
-    const KEY='ryu_fitness_days_v1';
-    const pad=n=>String(n).padStart(2,'0');
-    const ymd=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
-    const today=()=>new Date(new Date().toDateString());
-    const getStore=()=>JSON.parse(localStorage.getItem(KEY)||'{}');
-    const setStore=d=>localStorage.setItem(KEY,JSON.stringify(d));
-    const target=new Date('2026-01-01T00:00:00');
-    function tick(){const n=new Date();let ms=target-n;if(ms<0)ms=0;
-      const s=Math.floor(ms/1000),d=Math.floor(s/86400),h=Math.floor((s%86400)/3600),
-      m=Math.floor((s%3600)/60),sc=s%60;dd.textContent=d;hh.textContent=h;mm.textContent=m;ss.textContent=sc;
-      requestAnimationFrame(tick);}tick();
-    let viewDate=new Date();
-    function markToday(done=true){const d=ymd(today()),db=getStore();db[d]=db[d]||{};db[d].done=done;
-      if(note.value.trim())db[d].note=note.value.trim();setStore(db);render();}
-    function saveNote(){const d=ymd(today()),db=getStore();db[d]=db[d]||{};db[d].note=note.value.trim();setStore(db);render();}
-    function calcStreak(){const db=getStore();let c=today(),s=0;while(true){const k=ymd(c);
-      if(db[k]?.done)s++;else break;c=new Date(c);c.setDate(c.getDate()-1);}return s;}
-    function monthTotals(d){const db=getStore(),y=d.getFullYear(),m=d.getMonth();let t=0;
-      for(let day=1;day<=31;day++){const date=new Date(y,m,day);if(date.getMonth()!=m)break;
-        const k=ymd(date);if(db[k]?.done)t++;}return t;}
-    function renderCal(){const y=viewDate.getFullYear(),m=viewDate.getMonth(),f=new Date(y,m,1),
-      l=new Date(y,m+1,0),db=getStore();calTitle.textContent=f.toLocaleDateString('th-TH',{month:'long',year:'numeric'});
-      const dowNames=['จ','อ','พ','พฤ','ศ','ส','อา'];dow.innerHTML=dowNames.map(s=>`<div class="dow">${s}</div>`).join('');
-      const start=(f.getDay()+6)%7;const c=[];for(let i=0;i<start;i++)c.push('<div></div>');
-      for(let day=1;day<=l.getDate();day++){const d=new Date(y,m,day),k=ymd(d),isT=ymd(d)==ymd(today()),
-        done=!!db[k]?.done,n=db[k]?.note||'';c.push(`<div class="day ${done?'done':''} ${isT?'today':''}" data-date="${k}" title="${n}">
-        ${day}${done?'<span class="dot"></span>':''}</div>`);}calendar.innerHTML=c.join('');
-      document.querySelectorAll('.day[data-date]').forEach(e=>e.onclick=()=>{const k=e.dataset.date,db=getStore();
-        db[k]=db[k]||{};db[k].done=!db[k].done;setStore(db);render();});}
-    function renderHeader(){todayLabel.textContent=new Date().toLocaleDateString('th-TH',{weekday:'long',day:'2-digit',month:'short',year:'numeric'});
-      streak.textContent=calcStreak();monthTotal.textContent=monthTotals(new Date());
-      allTotal.textContent=Object.values(getStore()).filter(v=>v.done).length;const db=getStore(),k=ymd(today());
-      note.value=db[k]?.note||'';}
-    function render(){renderHeader();renderCal();}render();
-    prevMonth.onclick=()=>{viewDate.setMonth(viewDate.getMonth()-1);render();};
-    nextMonth.onclick=()=>{viewDate.setMonth(viewDate.getMonth()+1);render();};
-    doneBtn.onclick=()=>markToday(true);undoBtn.onclick=()=>markToday(false);saveNote.onclick=saveNote;
-    exportBtn.onclick=()=>{const b=new Blob([JSON.stringify(getStore(),null,2)],{type:'application/json'});
-      const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='ryu-fitness-backup.json';a.click();};
-    importBtn.onclick=()=>{const f=importFile.files?.[0];if(!f)return alert('เลือกไฟล์ก่อน');
-      const r=new FileReader();r.onload=()=>{setStore(JSON.parse(r.result));render();};r.readAsText(f);}
-  </script>
+<script>
+/* ========= State & Utils ========= */
+const KEY='ryu_ft_v2';
+const pad=n=>String(n).padStart(2,'0');
+const fmt=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const today=new Date(new Date().toDateString());
+let view=new Date(today);
+const load=()=>JSON.parse(localStorage.getItem(KEY)||'{"marks":{},"exercises":[{"name":"วิดพื้น","qty":20,"unit":"ครั้ง"},{"name":"สควอท","qty":20,"unit":"ครั้ง"}]}');
+const save=()=>localStorage.setItem(KEY,JSON.stringify(state));
+let state=load();
+
+/* ========= Countdown ========= */
+const target=new Date('2026-01-01T00:00:00');
+(function tick(){const n=new Date(); let ms=target-n; if(ms<0)ms=0;
+ const s=Math.floor(ms/1000), dd=Math.floor(s/86400), hh=Math.floor((s%86400)/3600), mm=Math.floor((s%3600)/60), ss=s%60;
+ d.textContent=dd; h.textContent=hh; m.textContent=mm; s.textContent=ss; requestAnimationFrame(tick);})();
+
+/* ========= Calendar ========= */
+function setMark(id, val, rerender=true){
+  if(val===0) delete state.marks[id]; else state.marks[id]=val;
+  save(); if(rerender){ renderCal(); updateStats(); }
+}
+function cycle(id){
+  const cur=state.marks[id]||0;
+  const next = cur===1 ? -1 : cur===-1 ? 0 : 1; // none->done->miss->none
+  setMark(id,next);
+}
+function renderCal(){
+  const y=view.getFullYear(), m=view.getMonth();
+  titleMonth.textContent=new Date(y,m,1).toLocaleDateString('th-TH',{month:'long',year:'numeric'});
+  todayLbl.textContent=new Date().toLocaleDateString('th-TH',{weekday:'long',day:'2-digit',month:'short',year:'numeric'});
+
+  const dowNames=['จ','อ','พ','พฤ','ศ','ส','อา'];
+  dow.innerHTML=dowNames.map(s=>`<div class="dow">${s}</div>`).join('');
+
+  const first=new Date(y,m,1), last=new Date(y,m+1,0);
+  const start=(first.getDay()+6)%7;
+  calGrid.innerHTML='';
+  for(let i=0;i<start;i++){ const d=document.createElement('div'); d.className='day'; d.style.visibility='hidden'; calGrid.appendChild(d); }
+  for(let day=1; day<=last.getDate(); day++){
+    const d=new Date(y,m,day); const id=fmt(d); const v=state.marks[id]||0;
+    const cell=document.createElement('div');
+    cell.className='day' + (fmt(d)===fmt(today)?' today':'') + (v===1?' done':'') + (v===-1?' miss':'');
+    cell.textContent = day + (v===1?' ✅': v===-1?' ❌':'');
+    cell.title = (v===1?'ทำแล้ว': v===-1?'พลาด':'ยังไม่ทำ');
+    cell.onclick = ()=>cycle(id);
+    calGrid.appendChild(cell);
+  }
+}
+function updateStats(){
+  const y=view.getFullYear(), m=pad(view.getMonth()+1), ym=`${y}-${m}-`;
+  const monthDone=Object.entries(state.marks).filter(([k,v])=>k.startsWith(ym)&&v===1).length;
+  statMonth.textContent=monthDone+' วัน';
+  const allDone=Object.values(state.marks).filter(v=>v===1).length;
+  statAll.textContent=allDone+' วัน';
+  let d=new Date(today), streak=0;
+  while((state.marks[fmt(d)]||0)===1){ streak++; d.setDate(d.getDate()-1); }
+  statStreak.textContent=streak+' วัน';
+}
+
+/* ========= Exercises ========= */
+function renderExercises(){
+  rows.innerHTML='';
+  state.exercises.forEach((ex,i)=>{
+    const row=document.createElement('div'); row.className='row';
+    row.innerHTML=`
+      <input value="${ex.name}" aria-label="ชื่อท่า"/>
+      <input class="qty" type="number" min="1" value="${ex.qty}" aria-label="จำนวน"/>
+      <input class="qty" value="${ex.unit}" aria-label="หน่วย"/>
+      <button data-act="tick">ติ๊กวันนี้</button>
+      <button data-act="del" class="bad">ลบ</button>`;
+    const [name,qty,unit]=row.querySelectorAll('input');
+    name.onchange=()=>{ex.name=name.value; save();};
+    qty.onchange=()=>{ex.qty=Number(qty.value||1); save();};
+    unit.onchange=()=>{ex.unit=unit.value; save();};
+    row.querySelector('[data-act="tick"]').onclick=()=>{
+      const id=fmt(today);
+      const snap=state.marks[id+':ex']||[];
+      const f=snap.find(s=>s.name===ex.name);
+      if(f){f.qty=ex.qty; f.unit=ex.unit;} else snap.push({name:ex.name,qty:ex.qty,unit:ex.unit});
+      state.marks[id+':ex']=snap; setMark(id,1,false); save(); renderCal(); updateStats();
+    };
+    row.querySelector('[data-act="del"]').onclick=()=>{
+      if(confirm('ลบท่านี้?')){ state.exercises.splice(i,1); save(); renderExercises(); }
+    };
+    rows.appendChild(row);
+  });
+}
+addEx.onclick=()=>{
+  const n=exName.value.trim(); if(!n) return alert('ใส่ชื่อท่าก่อน');
+  state.exercises.push({name:n, qty:Number(exQty.value||1), unit:exUnit.value||'ครั้ง'}); save();
+  exName.value=''; renderExercises();
+};
+exportCsv.onclick=()=>{
+  const lines=[['date','status','exercises']];
+  const keys=Object.keys(state.marks).filter(k=>!k.endsWith(':ex')).sort();
+  for(const k of keys){
+    const v=state.marks[k]; const exs=state.marks[k+':ex']||[];
+    const exTxt=exs.map(e=>`${e.name} ${e.qty} ${e.unit}`).join(' | ');
+    lines.push([k, v===1?'done': v===-1?'miss':'', exTxt]);
+  }
+  const csv=lines.map(r=>r.map(x=>`"${String(x).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'}); const url=URL.createObjectURL(blob);
+  const a=document.createElement('a'); a.href=url; a.download='workout_ryu.csv'; a.click(); URL.revokeObjectURL(url);
+};
+
+/* ========= Today buttons ========= */
+btnTodayDone.onclick = ()=> setMark(fmt(today),1);
+btnTodayMiss.onclick = ()=> setMark(fmt(today),-1);
+btnClearToday.onclick = ()=> setMark(fmt(today),0);
+prev.onclick=()=>{view.setMonth(view.getMonth()-1); renderCal(); updateStats();};
+next.onclick=()=>{view.setMonth(view.getMonth()+1); renderCal(); updateStats();};
+
+/* ========= Boot ========= */
+(function init(){
+  const dows=['จ','อ','พ','พฤ','ศ','ส','อา']; dow.innerHTML=dows.map(s=>`<div class="dow">${s}</div>`).join('');
+  renderCal(); renderExercises(); updateStats();
+})();
+</script>
 </body>
 </html>
