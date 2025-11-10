@@ -1,270 +1,198 @@
+<!--
+EV Lite AI Assistant — Drop-in Chat Widget (Frontend) + Serverless API examples
+- Frontend: index.html (this file)
+- Serverless backends included below as code blocks (Cloudflare Workers, Vercel)
+-->
 <!DOCTYPE html>
 <html lang="th">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Ryu • Fitness Tracker (New Year Countdown)</title>
-<meta name="theme-color" content="#0b0f0f" />
-<style>
-  :root{
-    --bg:#0b0f0f; --panel:#101616; --text:#f6fbfa; --muted:#b7c9c3;
-    --green:#2ecc71; --red:#ff5c5c; --gold:#ffd66b; --border:#1f2c2a;
-  }
-  *{box-sizing:border-box}
-  body{
-    margin:0;
-    font-family:system-ui,Inter,Segoe UI,Roboto,Arial,sans-serif;
-    color:var(--text);
-    background:
-      radial-gradient(1200px 500px at 10% -10%, #14302255, transparent 60%),
-      radial-gradient(900px 400px at 100% 0%, #1a232055, transparent 60%),
-      var(--bg);
-    overflow-x:hidden;
-  }
-  .wrap{max-width:1000px;margin:auto;padding:22px}
-  .banner{
-    display:flex;gap:12px;align-items:center;justify-content:center;
-    background:linear-gradient(90deg,#1a2f1f,#241b1b);
-    border:1px solid var(--border);
-    border-radius:16px;
-    padding:12px;margin-bottom:14px;
-    box-shadow:0 10px 30px rgba(0,0,0,.35)
-  }
-  .banner h1{margin:0;font-size:26px;letter-spacing:.3px}
-  .badge{background:#13201c;border:1px solid var(--border);padding:6px 10px;border-radius:999px}
-  .grid{display:grid;gap:16px}
-  @media(min-width:900px){.grid{grid-template-columns:1.2fr .8fr}}
-  .card{background:linear-gradient(180deg,#101717,#0e1414);border:1px solid var(--border);border-radius:16px;padding:16px}
-  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-  button{border:1px solid #23302e;background:#101717;color:var(--text);padding:9px 13px;border-radius:10px;cursor:pointer}
-  button.ok{background:linear-gradient(90deg,#1f8e54,#25a064);border-color:transparent}
-  button.bad{color:#ffc3c3;border-color:#3a2222;background:#171112}
-  input{background:#101717;border:1px solid #23302e;color:var(--text);padding:9px 11px;border-radius:10px}
-  input.qty{width:90px}
-  .stat{display:grid;grid-template-columns:auto 1fr;gap:6px 10px;margin:8px 0}
-  .pill{background:#101717;border:1px solid #23302e;border-radius:10px;padding:6px 10px}
-  .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-top:10px}
-  .dow,.day{display:flex;align-items:center;justify-content:center;min-height:44px;border-radius:10px}
-  .dow{background:#0f1716;border:1px solid #23302e;color:#a7bab5;font-weight:700}
-  .day{background:#0f1716;border:1px dashed #23302e;cursor:pointer;position:relative}
-  .day.today{outline:2px solid rgba(124,192,255,.35)}
-  .day.done{background:linear-gradient(180deg,#0f271c,#0f1b15);color:#bff6dc;border-style:solid}
-  .day.miss{background:linear-gradient(180deg,#2a1414,#1a0f10);color:#ffd1d1;border-style:solid}
-  .snow{pointer-events:none;position:fixed;inset:0;overflow:hidden}
-  .flake{position:absolute;top:-10px;width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.85);box-shadow:0 0 6px 2px rgba(255,255,255,.25)}
-  .divider{height:1px;background:linear-gradient(90deg,transparent,var(--red),var(--gold),var(--green),transparent);opacity:.6;margin:12px 0}
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>EV Lite AI Assistant</title>
+  <style>
+    :root{ --bg:#0a0f0b; --panel:#0f1a12; --text:#f8fff6; --muted:#b9d0bd; --border:#203326; --accent:#ffd166; --brand:#36c06b; }
+    *{box-sizing:border-box}
+    body{margin:0; font-family:system-ui,Segoe UI,Prompt,sans-serif; background:linear-gradient(180deg,#0a0f0b,#0f1a12); color:var(--text)}
+    .wrap{max-width:980px;margin:auto;padding:20px}
+    .card{background:#0f1a12;border:1px solid var(--border);border-radius:16px;padding:16px}
+    .btn{padding:10px 14px;border-radius:12px;border:1px solid var(--border);background:#14241a;color:#fff;cursor:pointer}
+    .btn.primary{background:linear-gradient(90deg,#e53935,#36c06b);border:none;color:#1b0d0d;font-weight:800}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
+    /* Floating chat widget */
+    .evai{position:fixed; right:18px; bottom:18px; z-index:50}
+    .evai-btn{width:56px;height:56px;border-radius:999px;display:grid;place-items:center;background:linear-gradient(90deg,#e53935,#36c06b);border:none;box-shadow:0 10px 30px rgba(0,0,0,.4); cursor:pointer}
+    .evai-panel{position:fixed; right:18px; bottom:86px; width:min(380px,94vw); height:520px; display:none}
+    .evai-panel.show{display:block}
+    .evai-box{background:#0e1712cc; backdrop-filter:blur(8px); border:1px solid var(--border); border-radius:16px; box-shadow:0 20px 60px rgba(0,0,0,.55); height:100%; display:flex; flex-direction:column}
+    .evai-head{padding:12px 14px; border-bottom:1px solid rgba(255,255,255,.06); display:flex; align-items:center; justify-content:space-between}
+    .evai-title{font-weight:900; letter-spacing:.3px}
+    .evai-body{padding:12px; flex:1; overflow:auto; display:flex; flex-direction:column; gap:10px}
+    .msg{display:flex; gap:8px}
+    .msg .bubble{max-width:86%; padding:10px 12px; border-radius:12px; border:1px solid var(--border)}
+    .msg.user{justify-content:flex-end}
+    .msg.user .bubble{background:#132319}
+    .msg.bot .bubble{background:#101d15}
+    .evai-input{display:flex; gap:8px; padding:10px; border-top:1px solid rgba(255,255,255,.06)}
+    .evai-input input{flex:1; background:#0f1a13; border:1px solid var(--border); color:#fff; padding:10px; border-radius:10px}
+    .tiny{color:var(--muted); font-size:12px}
+    code.inline{background:#0f1a13;border:1px solid var(--border);border-radius:6px;padding:1px 6px}
+  </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="banner">
-    <span class="badge">🎆</span>
-    <h1>Ryu Fitness Tracker • Countdown to New Year</h1>
-    <span class="badge">⭐</span>
+  <h1 style="margin:0">EV Lite AI Assistant</h1>
+  <p class="tiny">วางโค้ดนี้ลงหน้าเว็บใดๆ ของริว ก็จะได้แชตบอท AI ตอบลูกค้า/ตอบคำถามสินค้าได้ทันที โดยเรียกผ่าน <code class="inline">/api/ai</code> (ต้องมีแบ็กเอนด์เลเยอร์เพื่อซ่อน API key)</p>
+
+  <div class="card">
+    <h3 style="margin-top:0">วิธีตั้งค่าใน 3 ขั้น</h3>
+    <ol>
+      <li>ดีพลอยแบ็กเอนด์ (เลือกอย่างใดอย่างหนึ่งด้านล่าง: Cloudflare Workers หรือ Vercel)</li>
+      <li>ตั้งค่า Environment: <code class="inline">OPENAI_API_KEY</code> หรือ <code class="inline">GEMINI_API_KEY</code></li>
+      <li>วางสคริปต์วิจเจ็ต (อยู่ท้ายไฟล์) ลงหน้าที่ต้องการ แล้วแก้ <code class="inline">API_BASE</code> ให้ชี้ไปยังโดเมนของริว</li>
+    </ol>
   </div>
 
-  <div class="grid">
-    <!-- LEFT -->
-    <section class="card">
-      <div class="row" style="justify-content:space-between">
-        <div class="row">
-          <button id="prev">‹</button>
-          <div class="pill" id="titleMonth">เดือนนี้</div>
-          <button id="next">›</button>
-        </div>
-        <div class="pill" id="todayLbl"></div>
+  <div class="card" style="margin-top:12px">
+    <h3 style="margin-top:0">System Prompt (ปรับได้)</h3>
+    <pre style="white-space:pre-wrap;background:#0f1a13;border:1px solid var(--border);border-radius:12px;padding:10px">คุณเป็น EV Lite AI Assistant พูดไทย น้ำเสียงเพื่อนสนิท สุภาพกับลูกค้า หน้าที่:
+- ตอบคำถามสินค้า/สต็อก/การชำระเงิน
+- แนะนำแพ็กเกจ ราคา และลิงก์ซื้อทันทีหากมี
+- ถ้าคำถามเกินขอบเขต ให้เสนอให้ทักแอดมินพร้อมลิงก์</pre>
+  </div>
+
+  <div class="card" style="margin-top:12px">
+    <h3 style="margin-top:0">ตัวอย่างโค้ดแบ็กเอนด์ — Cloudflare Workers (Node-compatible)</h3>
+    <p class="tiny">ไฟล์ <code class="inline">worker.js</code> • ใช้กับรุ่นโมเดล <code class="inline">gpt-4.1-mini</code> หรือ <code class="inline">gpt-4o-mini</code> ได้</p>
+    <pre style="white-space:pre-wrap;background:#0f1a13;border:1px solid var(--border);border-radius:12px;padding:10px">export default {
+  async fetch(req, env) {
+    if (new URL(req.url).pathname !== '/api/ai') return new Response('Not found', {status:404});
+    if (req.method !== 'POST') return new Response('Method Not Allowed', {status:405});
+
+    const { messages } = await req.json();
+    const sys = {
+      role: 'system',
+      content: 'คุณคือ EV Lite AI Assistant (ไทย) ช่วยลูกค้าเรื่องสินค้าและการชำระเงิน ตอบสั้น กระชับ มีขั้นตอน'
+    };
+
+    const res = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${env.OPENAI_API_KEY}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        model: 'gpt-4.1-mini',
+        messages: [sys, ...messages],
+        temperature: 0.7
+      })
+    });
+
+    if (!res.ok) return new Response(await res.text(), {status:res.status});
+    const data = await res.json();
+    const text = data.choices?.[0]?.message?.content || '';
+    return new Response(JSON.stringify({ reply: text }), {headers: {'Content-Type':'application/json'}});
+  }
+}
+// wrangler.toml:
+// name = "ev-lite-ai"
+// main = "worker.js"
+// compatibility_date = "2025-11-01"
+// [vars]
+// # OPENAI_API_KEY set via dashboard secret</pre>
+  </div>
+
+  <div class="card" style="margin-top:12px">
+    <h3 style="margin-top:0">ตัวอย่างโค้ดแบ็กเอนด์ — Vercel Serverless (Node 18+)</h3>
+    <p class="tiny">ไฟล์ <code class="inline">api/ai.js</code> • เซ็ต <code class="inline">OPENAI_API_KEY</code> ใน Vercel Dashboard</p>
+    <pre style="white-space:pre-wrap;background:#0f1a13;border:1px solid var(--border);border-radius:12px;padding:10px">export default async function handler(req, res){
+  if(req.method !== 'POST') return res.status(405).end();
+  try{
+    const { messages } = req.body || {};
+    const sys = { role:'system', content:'คุณคือ EV Lite AI Assistant (ไทย) ช่วยลูกค้าเรื่องสินค้าและการชำระเงิน' };
+    const r = await fetch('https://api.openai.com/v1/chat/completions',{
+      method:'POST',
+      headers:{'Authorization':`Bearer ${process.env.OPENAI_API_KEY}`,'Content-Type':'application/json'},
+      body:JSON.stringify({ model:'gpt-4.1-mini', messages:[sys, ...(messages||[])], temperature:0.7 })
+    });
+    if(!r.ok){ const t = await r.text(); return res.status(r.status).send(t); }
+    const data = await r.json();
+    res.json({ reply: data.choices?.[0]?.message?.content || '' });
+  }catch(err){ res.status(500).json({ error: String(err) }); }
+}
+// vercel.json (optional)
+// { "routes": [{ "src": "/api/ai", "dest": "api/ai.js" }] }</pre>
+  </div>
+
+  <div class="card" style="margin-top:12px">
+    <h3 style="margin-top:0">ทางเลือก: Google AI Studio (Gemini) แทน OpenAI</h3>
+    <pre style="white-space:pre-wrap;background:#0f1a13;border:1px solid var(--border);border-radius:12px;padding:10px">// ในแบ็กเอนด์ เปลี่ยน endpoint:
+const r = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key='+process.env.GEMINI_API_KEY,{
+  method:'POST', headers:{'Content-Type':'application/json'},
+  body: JSON.stringify({ contents: [{ role:'user', parts:[{text: messages.map(m=>`${m.role}: ${m.content}`).join('\n') }] }] })
+});</pre>
+  </div>
+
+</div>
+
+<!-- Floating AI Widget (Frontend) -->
+<div class="evai">
+  <button id="evaiBtn" class="evai-btn" title="ถาม AI">💬</button>
+  <div id="evaiPanel" class="evai-panel">
+    <div class="evai-box">
+      <div class="evai-head">
+        <div class="evai-title">EV AI Assistant</div>
+        <button id="evaiClose" class="btn">ปิด</button>
       </div>
-
-      <div class="stat">
-        <div>สตรีค</div><div id="statStreak">0 วัน</div>
-        <div>รวมเดือนนี้</div><div id="statMonth">0 วัน</div>
-        <div>รวมทั้งหมด</div><div id="statAll">0 วัน</div>
+      <div id="evaiBody" class="evai-body" aria-live="polite"></div>
+      <div class="evai-input">
+        <input id="evaiInput" placeholder="พิมพ์ถามเรื่องสินค้า การจ่ายเงิน ฯลฯ..." />
+        <button id="evaiSend" class="btn primary">ส่ง</button>
       </div>
-
-      <div class="cal-grid" id="dow"></div>
-      <div class="cal-grid" id="calGrid"></div>
-
-      <div class="row" style="margin-top:10px">
-        <button id="btnTodayDone" class="ok">ติ๊กวันนี้ ✅</button>
-        <button id="btnTodayMiss" class="bad">ติ๊กพลาดวันนี้ ❌</button>
-        <button id="btnClearToday">ล้างสถานะวันนี้</button>
-      </div>
-      <p class="pill" style="margin-top:8px">กดวันเพื่อวนสถานะ: ว่าง → ✅ ทำ → ❌ พลาด → ว่าง</p>
-    </section>
-
-    <!-- RIGHT -->
-    <aside class="card">
-      <h3>ท่าออกกำลังกายวันนี้</h3>
-      <div id="rows"></div>
-      <div class="row" style="margin-top:8px">
-        <input id="exName" placeholder="ชื่อท่า เช่น วิดพื้น"/>
-        <input id="exQty" class="qty" type="number" min="1" value="10"/>
-        <input id="exUnit" class="qty" value="ครั้ง"/>
-        <button id="addEx" class="ok">เพิ่มท่า</button>
-      </div>
-
-      <div class="divider"></div>
-
-      <h3>นับถอยหลังสู่ปีใหม่ 🎆</h3>
-      <div class="row">
-        <div class="pill">
-          เหลือ <b id="d">0</b> วัน <b id="h">0</b> ชม.
-          <b id="m">0</b> นาที <b id="sec">0</b> วิ
-        </div>
-      </div>
-
-      <div class="divider"></div>
-      <button id="exportCsv">Export CSV</button>
-    </aside>
+    </div>
   </div>
 </div>
 
-<!-- Snow layer -->
-<div class="snow" id="snow"></div>
-
 <script>
-const KEY='ryu_ft_newyear_v3';
-const pad=n=>String(n).padStart(2,'0');
-const fmt=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
-const today=new Date(new Date().toDateString());
-let view=new Date(today);
-const load=()=>JSON.parse(localStorage.getItem(KEY)||'{"marks":{},"exercises":[{"name":"วิดพื้น","qty":20,"unit":"ครั้ง"},{"name":"สควอท","qty":20,"unit":"ครั้ง"}]}');
-const save=()=>localStorage.setItem(KEY,JSON.stringify(state));
-let state=load();
+// ===== Frontend Chat Widget =====
+const API_BASE = '/api/ai'; // เปลี่ยนให้ชี้โดเมนของริวถ้าดีพลอยแยก
+const panel = document.getElementById('evaiPanel');
+const bodyBox = document.getElementById('evaiBody');
+const input = document.getElementById('evaiInput');
+const btn = document.getElementById('evaiBtn');
+const send = document.getElementById('evaiSend');
+const closeBtn = document.getElementById('evaiClose');
 
-/* Countdown */
-const target = new Date(`${new Date().getFullYear()+1}-01-01T00:00:00`);
-function tickCountdown(){
-  const now=new Date();
-  let ms=target-now; if(ms<0) ms=0;
-  const totalSec=Math.floor(ms/1000),
-        days=Math.floor(totalSec/86400),
-        hours=Math.floor((totalSec%86400)/3600),
-        mins=Math.floor((totalSec%3600)/60),
-        secs=totalSec%60;
-  d.textContent=days;
-  h.textContent=hours;
-  m.textContent=mins;
-  sec.textContent=secs;
-  requestAnimationFrame(tickCountdown);
-}
-tickCountdown();
+btn.onclick = ()=> panel.classList.toggle('show');
+closeBtn.onclick = ()=> panel.classList.remove('show');
+input.addEventListener('keydown', e=>{ if(e.key==='Enter') send.click(); });
 
-/* Calendar */
-function setMark(id,val){
-  if(val===0) delete state.marks[id]; else state.marks[id]=val;
-  save(); renderCal(); updateStats();
+function addMsg(role, text){
+  const row = document.createElement('div'); row.className = 'msg '+(role==='user'?'user':'bot');
+  const b = document.createElement('div'); b.className='bubble'; b.textContent = text;
+  row.appendChild(b); bodyBox.appendChild(row); bodyBox.scrollTop = bodyBox.scrollHeight;
 }
-function cycle(id){
-  const cur=state.marks[id]||0;
-  const next=cur===1?-1:cur===-1?0:1;
-  setMark(id,next);
-}
-function renderCal(){
-  const y=view.getFullYear(), m=view.getMonth();
-  titleMonth.textContent=new Date(y,m,1).toLocaleDateString('th-TH',{month:'long',year:'numeric'});
-  todayLbl.textContent=new Date().toLocaleDateString('th-TH',{weekday:'long',day:'2-digit',month:'short',year:'numeric'});
-  const dows=['จ','อ','พ','พฤ','ศ','ส','อา']; dow.innerHTML=dows.map(s=>`<div class="dow">${s}</div>`).join('');
-  const first=new Date(y,m,1), last=new Date(y,m+1,0);
-  const start=(first.getDay()+6)%7;
-  calGrid.innerHTML='';
-  for(let i=0;i<start;i++){ const d=document.createElement('div'); d.className='day'; d.style.visibility='hidden'; calGrid.appendChild(d); }
-  for(let day=1; day<=last.getDate(); day++){
-    const d=new Date(y,m,day); const id=fmt(d); const v=state.marks[id]||0;
-    const cell=document.createElement('div');
-    cell.className='day' + (fmt(d)===fmt(today)?' today':'') + (v===1?' done':'') + (v===-1?' miss':'');
-    cell.textContent = day + (v===1?' ✅': v===-1?' ❌':'');
-    cell.onclick = ()=>cycle(id);
-    calGrid.appendChild(cell);
+
+async function askAI(text){
+  addMsg('user', text);
+  const thinking = 'กำลังคิด…'; addMsg('bot', thinking);
+  try{
+    const res = await fetch(API_BASE, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ messages:[{role:'user', content:text}] }) });
+    const data = await res.json();
+    // แทนที่บับเบิลล่าสุด (thinking) ด้วยคำตอบจริง
+    bodyBox.lastChild.querySelector('.bubble').textContent = data.reply || '(ไม่มีคำตอบ)';
+  }catch(err){
+    bodyBox.lastChild.querySelector('.bubble').textContent = 'เออเรอร์: '+String(err);
   }
 }
-function updateStats(){
-  const y=view.getFullYear(), m=pad(view.getMonth()+1), ym=`${y}-${m}-`;
-  const monthDone=Object.entries(state.marks).filter(([k,v])=>k.startsWith(ym)&&v===1).length;
-  statMonth.textContent=monthDone+' วัน';
-  const allDone=Object.values(state.marks).filter(v=>v===1).length;
-  statAll.textContent=allDone+' วัน';
-  let d=new Date(today), streak=0; while((state.marks[fmt(d)]||0)===1){ streak++; d.setDate(d.getDate()-1); }
-  statStreak.textContent=streak+' วัน';
+
+send.onclick = ()=>{
+  const q = (input.value||'').trim(); if(!q) return; input.value=''; askAI(q);
 }
 
-/* Exercises */
-function renderExercises(){
-  rows.innerHTML='';
-  state.exercises.forEach((ex,i)=>{
-    const row=document.createElement('div'); row.className='row';
-    row.innerHTML=`
-      <input value="${ex.name}" />
-      <input class="qty" type="number" min="1" value="${ex.qty}" />
-      <input class="qty" value="${ex.unit}" />
-      <button data-act="tick" class="ok">ติ๊กวันนี้</button>
-      <button data-act="del" class="bad">ลบ</button>`;
-    const [name,qty,unit]=row.querySelectorAll('input');
-    name.onchange=()=>{ex.name=name.value; save();};
-    qty.onchange=()=>{ex.qty=Number(qty.value||1); save();};
-    unit.onchange=()=>{ex.unit=unit.value; save();};
-    row.querySelector('[data-act="tick"]').onclick=()=>{
-      const id=fmt(today);
-      const snap=state.marks[id+':ex']||[];
-      const f=snap.find(s=>s.name===ex.name);
-      if(f){f.qty=ex.qty; f.unit=ex.unit;} else snap.push({name:ex.name,qty:ex.qty,unit:ex.unit});
-      state.marks[id+':ex']=snap; setMark(id,1);
-    };
-    row.querySelector('[data-act="del"]').onclick=()=>{
-      if(confirm('ลบท่านี้?')){ state.exercises.splice(i,1); save(); renderExercises(); }
-    };
-    rows.appendChild(row);
-  });
-}
-addEx.onclick=()=>{
-  const n=exName.value.trim(); if(!n) return alert('ใส่ชื่อท่าก่อน');
-  state.exercises.push({name:n, qty:Number(exQty.value||1), unit:exUnit.value||'ครั้ง'}); save();
-  exName.value=''; renderExercises();
-};
-exportCsv.onclick=()=>{
-  const lines=[['date','status','exercises']];
-  const keys=Object.keys(state.marks).filter(k=>!k.endsWith(':ex')).sort();
-  for(const k of keys){
-    const v=state.marks[k]; const exs=state.marks[k+':ex']||[];
-    const exTxt=exs.map(e=>`${e.name} ${e.qty} ${e.unit}`).join(' | ');
-    lines.push([k, v===1?'done': v===-1?'miss':'', exTxt]);
-  }
-  const csv=lines.map(r=>r.map(x=>`"${String(x).replace(/"/g,'""')}"`).join(',')).join('\n');
-  const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'}); const url=URL.createObjectURL(blob);
-  const a=document.createElement('a'); a.href=url; a.download='workout_ryu.csv'; a.click(); URL.revokeObjectURL(url);
-};
-
-/* Boot + Buttons */
-btnTodayDone.onclick = ()=> setMark(fmt(today),1);
-btnTodayMiss.onclick = ()=> setMark(fmt(today),-1);
-btnClearToday.onclick = ()=> setMark(fmt(today),0); // ✅ แก้แล้ว: ใช้งานได้จริง
-prev.onclick=()=>{view.setMonth(view.getMonth()-1); renderCal(); updateStats();};
-next.onclick=()=>{view.setMonth(view.getMonth()+1); renderCal(); updateStats();};
-
-(function init(){
-  const dows=['จ','อ','พ','พฤ','ศ','ส','อา']; dow.innerHTML=dows.map(s=>`<div class="dow">${s}</div>`).join('');
-  renderCal(); renderExercises(); updateStats();
-})();
-
-/* Snow effect */
-(function snow(){
-  const box=document.getElementById('snow');
-  const W=window.innerWidth;
-  for(let i=0;i<80;i++){
-    const f=document.createElement('div'); f.className='flake';
-    const size=Math.random()*3+2;
-    f.style.width=f.style.height=size+'px';
-    f.style.left=Math.random()*W+'px';
-    f.style.animation=`fall ${6+Math.random()*8}s linear ${Math.random()*6}s infinite`;
-    box.appendChild(f);
-  }
-})();
+// ข้อความต้อนรับแรก
+addMsg('bot', 'สวัสดีจ้า 👋 ถามเรื่องสินค้า การชำระเงิน หรือลิงก์ซื้อได้เลย');
 </script>
-<style>
-@keyframes fall{
-  0%{transform:translateY(-10px)}
-  100%{transform:translateY(110vh)}
-}
-</style>
 </body>
 </html>
+
