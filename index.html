@@ -1,1315 +1,175 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="th">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#0a0f0b" />
-  <title>EVAN VALE • Workout Hub</title>
-
-  <style>
-    :root{
-      --bg:#060a08;
-      --bg2:#0c1711;
-      --panel: rgba(16, 26, 20, .72);
-      --panel2: rgba(13, 22, 17, .88);
-      --text:#f3fff2;
-      --muted:#b7d0bc;
-      --border:rgba(180, 230, 190, .14);
-      --shadow: 0 18px 60px rgba(0,0,0,.45);
-      --brand:#e53935;
-      --brand2:#36c06b;
-      --accent:#ffd166;
-
-      --r:18px;
-      --r2:14px;
-      --gap:12px;
-      --max:980px;
-      --font: ui-sans-serif, system-ui, "Segoe UI", "Prompt", sans-serif;
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0;
-      font-family:var(--font);
-      color:var(--text);
-      background:
-        radial-gradient(1200px 700px at 85% -10%, rgba(54,192,107,.22), transparent 60%),
-        radial-gradient(900px 600px at 10% 0%, rgba(229,57,53,.16), transparent 55%),
-        linear-gradient(180deg,var(--bg),var(--bg2));
-      overflow-x:hidden;
-    }
-
-    .wrap{max-width:var(--max); margin:auto; padding:16px; padding-bottom:26px}
-    .topbar{
-      position:sticky; top:10px; z-index:10;
-      display:flex; align-items:center; justify-content:space-between; gap:10px;
-      background:linear-gradient(180deg, rgba(22,34,26,.92), rgba(14,23,18,.92));
-      border:1px solid var(--border);
-      border-radius:var(--r);
-      padding:12px;
-      box-shadow:var(--shadow);
-      backdrop-filter: blur(10px);
-    }
-    .brand{
-      display:flex; flex-direction:column; gap:4px; min-width:180px;
-    }
-    .brand .t{font-weight:950; letter-spacing:.2px; font-size:15px}
-    .brand .s{font-size:12px; color:var(--muted)}
-    .tools{display:flex; gap:8px; flex-wrap:wrap; align-items:center; justify-content:flex-end}
-    .btn{
-      padding:9px 12px;
-      border-radius:14px;
-      border:1px solid var(--border);
-      background:linear-gradient(180deg, rgba(20,36,26,.92), rgba(12,22,16,.92));
-      color:var(--text);
-      font-weight:900;
-      cursor:pointer;
-      transition: transform .08s ease, filter .12s ease;
-      user-select:none;
-    }
-    .btn:hover{filter:brightness(1.06)}
-    .btn:active{transform:translateY(1px)}
-    .btn.primary{
-      border:none;
-      background:linear-gradient(90deg,var(--brand),var(--brand2));
-      color:#150909;
-    }
-    .btn.ghost{
-      background:transparent;
-      border:1px dashed rgba(180,230,190,.18);
-      color:var(--muted);
-    }
-    .pill{
-      display:inline-flex; gap:8px; align-items:center;
-      padding:6px 10px;
-      border:1px solid var(--border);
-      border-radius:999px;
-      background:rgba(14,23,18,.65);
-      font-size:12px;
-      color:var(--muted);
-      white-space:nowrap;
-    }
-    .grid{display:grid; gap:var(--gap)}
-    .cols{grid-template-columns: 1.2fr .8fr}
-    @media (max-width:900px){ .cols{grid-template-columns:1fr} }
-
-    .card{
-      background:var(--panel);
-      border:1px solid var(--border);
-      border-radius:var(--r);
-      padding:14px;
-      box-shadow:var(--shadow);
-      backdrop-filter: blur(10px);
-    }
-
-    .tabs{display:flex; gap:8px; flex-wrap:wrap}
-    .tab{
-      padding:9px 12px;
-      border-radius:999px;
-      border:1px solid var(--border);
-      background:rgba(14,23,18,.6);
-      color:var(--muted);
-      font-weight:900;
-      cursor:pointer;
-    }
-    .tab.active{
-      color:#150909;
-      border:none;
-      background:linear-gradient(90deg,var(--brand),var(--brand2));
-    }
-
-    .row{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
-    .row > *{flex:1}
-    .field label{display:block; font-size:12px; color:var(--muted); margin:0 0 6px}
-    input, select, textarea{
-      width:100%;
-      padding:10px 12px;
-      border-radius:12px;
-      border:1px solid var(--border);
-      background:rgba(10, 18, 13, .85);
-      color:var(--text);
-      outline:none;
-    }
-    textarea{min-height:84px; resize:vertical}
-
-    .hr{height:1px; background:linear-gradient(90deg,transparent,rgba(255,255,255,.12),transparent); margin:10px 0}
-
-    .list{display:flex; flex-direction:column; gap:10px}
-    .item{
-      border:1px solid var(--border);
-      border-radius:var(--r2);
-      padding:10px;
-      background:var(--panel2);
-      display:grid;
-      gap:8px;
-    }
-    .itemhead{display:flex; justify-content:space-between; gap:10px; align-items:center}
-    .name{font-weight:950}
-    .meta{font-size:12px; color:var(--muted)}
-    .chips{display:flex; gap:6px; flex-wrap:wrap}
-    .chip{
-      font-size:12px;
-      padding:4px 8px;
-      border-radius:999px;
-      border:1px solid rgba(180,230,190,.16);
-      color:var(--muted);
-      background:rgba(10,18,13,.55);
-      white-space:nowrap;
-    }
-    .mini{font-size:12px; color:var(--muted)}
-    .split{display:grid; grid-template-columns:1fr 1fr; gap:10px}
-    @media (max-width:560px){ .split{grid-template-columns:1fr} }
-
-    .timer{
-      display:grid; gap:10px;
-      border:1px solid var(--border);
-      border-radius:var(--r2);
-      padding:12px;
-      background:rgba(10,18,13,.55);
-    }
-    .bigtime{
-      font-weight:1000;
-      font-size:40px;
-      letter-spacing:1px;
-      text-align:center;
-    }
-    .hint{font-size:12px; color:var(--muted); text-align:center}
-    .progress{
-      width:100%; height:10px; border-radius:999px;
-      background:rgba(255,255,255,.08);
-      border:1px solid rgba(180,230,190,.12);
-      overflow:hidden;
-    }
-    .bar{height:100%; width:0%}
-
-    .calendar{
-      display:grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap:6px;
-    }
-    .day{
-      border:1px solid rgba(180,230,190,.12);
-      border-radius:12px;
-      padding:10px 8px;
-      text-align:center;
-      background:rgba(10,18,13,.55);
-      color:var(--muted);
-      font-size:12px;
-      user-select:none;
-    }
-    .day.done{
-      color:#150909;
-      border:none;
-      background:linear-gradient(90deg,var(--brand),var(--brand2));
-      font-weight:950;
-    }
-    .day.today{
-      outline:2px solid rgba(255, 209, 102, .55);
-    }
-
-    .graph{
-      border:1px solid rgba(180,230,190,.12);
-      border-radius:var(--r2);
-      padding:10px;
-      background:rgba(10,18,13,.55);
-    }
-    .graph svg{width:100%; height:140px; display:block}
-    .footnote{font-size:12px; color:var(--muted)}
-    .hide{display:none}
-    .toast{
-      position:fixed; left:50%; bottom:18px; transform:translateX(-50%);
-      background:rgba(12,22,16,.92);
-      border:1px solid rgba(180,230,190,.14);
-      color:var(--text);
-      padding:10px 12px;
-      border-radius:999px;
-      box-shadow:var(--shadow);
-      font-size:12px;
-      opacity:0; pointer-events:none;
-      transition:opacity .18s ease, transform .18s ease;
-      z-index:99;
-    }
-    .toast.show{opacity:1; transform:translateX(-50%) translateY(-3px)}
-    .kbd{
-      font-size:12px;
-      padding:2px 6px;
-      border-radius:8px;
-      border:1px solid rgba(180,230,190,.18);
-      background:rgba(10,18,13,.55);
-      color:var(--muted);
-      font-weight:800;
-    }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WAY — Private Archive</title>
+<style>
+:root{
+  --bg:#06080f;
+  --card:#0c1122cc;
+  --text:#e9eeff;
+  --muted:#9aa6d6;
+  --neon:#7c5cff;
+  --neon2:#15e3ff;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto;
+  color:var(--text);
+  background:
+    radial-gradient(800px 400px at 10% 10%, rgba(124,92,255,.25), transparent 60%),
+    radial-gradient(800px 400px at 90% 20%, rgba(21,227,255,.18), transparent 60%),
+    var(--bg);
+}
+header{
+  padding:20px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  backdrop-filter: blur(10px);
+}
+.logo{
+  font-weight:900;
+  letter-spacing:2px;
+}
+nav a{
+  color:var(--text);
+  text-decoration:none;
+  margin-left:14px;
+  padding:8px 14px;
+  border:1px solid rgba(255,255,255,.15);
+  border-radius:999px;
+}
+main{
+  max-width:900px;
+  margin:auto;
+  padding:20px;
+}
+.card{
+  background:var(--card);
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:18px;
+  padding:20px;
+  margin-bottom:16px;
+}
+h1{margin-top:0}
+.episode{
+  padding:14px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.12);
+  margin-bottom:10px;
+  cursor:pointer;
+}
+.episode:hover{
+  box-shadow:0 0 0 3px rgba(124,92,255,.2);
+}
+.reader{
+  white-space:pre-wrap;
+  line-height:1.9;
+  font-size:18px;
+}
+footer{
+  text-align:center;
+  color:var(--muted);
+  font-size:12px;
+  padding:20px;
+}
+</style>
 </head>
 
 <body>
-<div class="wrap">
-  <header class="topbar">
-    <div class="brand">
-      <div class="t">EVAN VALE • Workout Hub</div>
-      <div class="s">บันทึก + จับเวลา + สตรีค — ไฟล์เดียวติดตั้งเป็นแอปได้</div>
+<header>
+  <div class="logo">WAY</div>
+  <nav>
+    <a href="#" onclick="showHome()">HOME</a>
+    <a href="#" onclick="showEpisode(1)">READ</a>
+  </nav>
+</header>
+
+<main>
+  <div id="home">
+    <div class="card">
+      <h1>Private Archive</h1>
+      <p style="color:var(--muted)">
+        ห้องส่วนตัวของกู  
+        ที่เก็บเรื่องที่ไม่จำเป็นต้องมีใครเข้าใจ
+      </p>
     </div>
-    <div class="tools">
-      <button class="btn" id="btnInstall">ติดตั้งแอป</button>
-      <button class="btn" id="btnExport">สำรอง</button>
-      <label class="btn">
-        <input id="importFile" type="file" accept="application/json" hidden>
-        นำเข้า
-      </label>
-      <button class="btn ghost" id="btnReset">ล้างข้อมูล</button>
-    </div>
-  </header>
 
-  <section class="card" style="margin-top:12px">
-    <div class="row" style="align-items:flex-start">
-      <div style="flex:1.4">
-        <div class="tabs" id="tabs">
-          <button class="tab active" data-tab="today">วันนี้</button>
-          <button class="tab" data-tab="plan">ตาราง/ท่า</button>
-          <button class="tab" data-tab="timer">จับเวลา</button>
-          <button class="tab" data-tab="stats">สถิติ</button>
-          <button class="tab" data-tab="streak">สตรีค</button>
-        </div>
-        <div class="hr"></div>
+    <div class="card">
+      <h2>Episodes</h2>
 
-        <!-- TODAY -->
-        <div id="tab-today" class="grid">
-          <div class="split">
-            <div class="field">
-              <label>เป้าหมายวันนี้ (เวลาออกกำลังกาย นาที)</label>
-              <input id="goalMin" type="number" min="0" step="5" placeholder="เช่น 20" />
-            </div>
-            <div class="field">
-              <label>เป้าหมายวันนี้ (เซ็ตทั้งหมด)</label>
-              <input id="goalSets" type="number" min="0" step="1" placeholder="เช่น 12" />
-            </div>
-          </div>
-
-          <div class="split">
-            <div class="field">
-              <label>ทำจริงวันนี้ (นาที)</label>
-              <input id="doneMin" type="number" min="0" step="1" placeholder="เช่น 18" />
-            </div>
-            <div class="field">
-              <label>ทำจริงวันนี้ (เซ็ต)</label>
-              <input id="doneSets" type="number" min="0" step="1" placeholder="เช่น 10" />
-            </div>
-          </div>
-
-          <div class="field">
-            <label>บันทึกวันนี้ (สั้น ๆ)</label>
-            <textarea id="todayNote" placeholder="เช่น โดดเชือก 5 นาที + วิดพื้นกำแพง 3 เซ็ต + ดัมเบลไบเซป..."></textarea>
-          </div>
-
-          <div class="row" style="gap:8px">
-            <button class="btn primary" id="btnSaveToday">บันทึกวันนี้</button>
-            <span class="pill">คีย์ลัด: <span class="kbd">Ctrl</span> + <span class="kbd">Enter</span> บันทึก</span>
-          </div>
-
-          <div class="hr"></div>
-
-          <div class="graph">
-            <div class="row" style="align-items:center">
-              <div style="flex:1">
-                <div style="font-weight:950">ความคืบหน้าเป้าหมาย</div>
-                <div class="mini" id="progressTxt">—</div>
-              </div>
-              <span class="pill">อัปเดตอัตโนมัติ</span>
-            </div>
-            <div class="progress"><div class="bar" id="progressBar"></div></div>
-          </div>
-        </div>
-
-        <!-- PLAN -->
-        <div id="tab-plan" class="grid hide">
-          <div class="split">
-            <div class="field">
-              <label>เพิ่มท่าใหม่</label>
-              <input id="exName" placeholder="ชื่อท่า เช่น วิดพื้น, โดดเชือก, ดัมเบลคาร์ล" />
-            </div>
-            <div class="field">
-              <label>ประเภท</label>
-              <select id="exType">
-                <option value="strength">กล้าม/แรงต้าน</option>
-                <option value="cardio">คาร์ดิโอ</option>
-                <option value="mobility">ยืด/โมบิลิตี้</option>
-              </select>
-            </div>
-          </div>
-          <div class="split">
-            <div class="field">
-              <label>หน่วย (เลือกอย่างใดอย่างหนึ่ง)</label>
-              <select id="exUnit">
-                <option value="sets_reps">เซ็ต/ครั้ง</option>
-                <option value="minutes">นาที</option>
-                <option value="seconds">วินาที</option>
-              </select>
-            </div>
-            <div class="field">
-              <label>เป้าหมายแนะนำ</label>
-              <input id="exTarget" placeholder="เช่น 3x10 หรือ 8 นาที หรือ 45 วิ" />
-            </div>
-          </div>
-          <div class="row" style="gap:8px">
-            <button class="btn primary" id="btnAddEx">เพิ่มท่า</button>
-            <button class="btn" id="btnSeed">ใส่ท่าพื้นฐานให้</button>
-          </div>
-
-          <div class="hr"></div>
-
-          <div style="display:flex; justify-content:space-between; gap:10px; align-items:center">
-            <div>
-              <div style="font-weight:950">รายการท่า</div>
-              <div class="mini">แตะ “ใช้วันนี้” เพื่อดึงไปใส่ในบันทึกวันนี้แบบไว ๆ</div>
-            </div>
-            <select id="filterType" style="max-width:220px">
-              <option value="all">ทั้งหมด</option>
-              <option value="strength">กล้าม/แรงต้าน</option>
-              <option value="cardio">คาร์ดิโอ</option>
-              <option value="mobility">ยืด/โมบิลิตี้</option>
-            </select>
-          </div>
-
-          <div class="list" id="exList"></div>
-        </div>
-
-        <!-- TIMER -->
-        <div id="tab-timer" class="grid hide">
-          <div class="timer">
-            <div class="split">
-              <div class="field">
-                <label>โหมดจับเวลา</label>
-                <select id="timerMode">
-                  <option value="stopwatch">Stopwatch (นับขึ้น)</option>
-                  <option value="interval">Interval (ทำ/พัก วน)</option>
-                  <option value="tabata">Tabata (20/10 x 8)</option>
-                </select>
-              </div>
-              <div class="field">
-                <label>เสียงแจ้งเตือน</label>
-                <select id="beepMode">
-                  <option value="on">เปิด</option>
-                  <option value="off">ปิด</option>
-                </select>
-              </div>
-            </div>
-
-            <div id="intervalFields" class="split">
-              <div class="field">
-                <label>ทำงาน (วินาที)</label>
-                <input id="workSec" type="number" min="1" step="1" value="30" />
-              </div>
-              <div class="field">
-                <label>พัก (วินาที)</label>
-                <input id="restSec" type="number" min="0" step="1" value="15" />
-              </div>
-            </div>
-
-            <div class="split">
-              <div class="field">
-                <label>จำนวนรอบ (Interval/Tabata)</label>
-                <input id="rounds" type="number" min="1" step="1" value="8" />
-              </div>
-              <div class="field">
-                <label>พักยาวหลังครบทุก 4 รอบ (วินาที)</label>
-                <input id="longRest" type="number" min="0" step="1" value="0" />
-              </div>
-            </div>
-
-            <div class="bigtime" id="timeTxt">00:00</div>
-            <div class="hint" id="phaseTxt">พร้อม</div>
-            <div class="progress"><div class="bar" id="timeBar"></div></div>
-
-            <div class="row" style="gap:8px">
-              <button class="btn primary" id="btnStart">เริ่ม</button>
-              <button class="btn" id="btnPause">พัก</button>
-              <button class="btn ghost" id="btnResetTimer">รีเซ็ต</button>
-            </div>
-
-            <div class="footnote">
-              ทริค: ใช้ Interval เวลาโดดเชือก/แพลงก์/สควอท จะคุมวินัยได้โคตรดี
-            </div>
-          </div>
-        </div>
-
-        <!-- STATS -->
-        <div id="tab-stats" class="grid hide">
-          <div class="split">
-            <div class="field">
-              <label>น้ำหนัก (กก.)</label>
-              <input id="wKg" type="number" step="0.1" placeholder="เช่น 74.5" />
-            </div>
-            <div class="field">
-              <label>รอบเอว (ซม.)</label>
-              <input id="waist" type="number" step="0.1" placeholder="เช่น 86" />
-            </div>
-          </div>
-          <div class="split">
-            <div class="field">
-              <label>รอบอก (ซม.)</label>
-              <input id="chest" type="number" step="0.1" placeholder="เช่น 98" />
-            </div>
-            <div class="field">
-              <label>รอบแขน (ซม.)</label>
-              <input id="arm" type="number" step="0.1" placeholder="เช่น 33.5" />
-            </div>
-          </div>
-
-          <div class="row" style="gap:8px">
-            <button class="btn primary" id="btnAddStat">บันทึกสถิติ</button>
-            <button class="btn" id="btnUseTodayStat">ดึงวันที่วันนี้</button>
-          </div>
-
-          <div class="hr"></div>
-
-          <div class="graph">
-            <div class="row" style="align-items:center">
-              <div style="flex:1">
-                <div style="font-weight:950">กราฟน้ำหนัก (ล่าสุด 14 ครั้ง)</div>
-                <div class="mini" id="statHint">—</div>
-              </div>
-              <select id="statPick" style="max-width:220px">
-                <option value="wKg">น้ำหนัก</option>
-                <option value="waist">เอว</option>
-                <option value="chest">อก</option>
-                <option value="arm">แขน</option>
-              </select>
-            </div>
-            <svg id="svgChart" viewBox="0 0 320 140" preserveAspectRatio="none" aria-label="chart"></svg>
-            <div class="mini">* กราฟนี้วาดเอง ไม่ใช้ไลบรารี — โคตรมินิมอล</div>
-          </div>
-
-          <div class="hr"></div>
-
-          <div class="list" id="statList"></div>
-        </div>
-
-        <!-- STREAK -->
-        <div id="tab-streak" class="grid hide">
-          <div class="row" style="align-items:center">
-            <div style="flex:1">
-              <div style="font-weight:950">สตรีค 28 วันล่าสุด</div>
-              <div class="mini">กดวันที่เพื่อสลับ “ทำแล้ว/ยัง” ได้</div>
-            </div>
-            <span class="pill">สตรีคตอนนี้: <b id="streakNow">0</b> วัน</span>
-            <span class="pill">รวมเดือนนี้: <b id="monthDone">0</b> วัน</span>
-          </div>
-
-          <div class="calendar" id="cal"></div>
-
-          <div class="hr"></div>
-
-          <div class="field">
-            <label>สรุปงานที่ทำบ่อย (auto)</label>
-            <textarea id="autoSummary" readonly></textarea>
-          </div>
+      <div class="episode" onclick="showEpisode(1)">
+        <b>EP1:</b> กลับมาในห้อง
+        <div style="color:var(--muted);font-size:13px">
+          จุดเริ่มที่ไม่มีใครถอย
         </div>
       </div>
 
-      <!-- RIGHT SIDE: Quick panel -->
-      <aside style="flex:.9">
-        <div class="card grid">
-          <div class="row" style="align-items:center">
-            <span class="pill" id="todayPill">วันนี้: —</span>
-            <span class="pill">โหมด: <b>Offline-first</b></span>
-          </div>
-
-          <div class="graph">
-            <div style="font-weight:950">Quick Add (ใส่บันทึกไว)</div>
-            <div class="mini">เลือกท่าจาก “ตาราง/ท่า” แล้วกดใช้วันนี้ หรือพิมพ์เอง</div>
-            <div class="hr"></div>
-            <div class="row" style="gap:8px">
-              <input id="quickText" placeholder="เช่น วิดพื้น 3x12 / โดดเชือก 6 นาที" />
-              <button class="btn" id="btnQuickAdd">เพิ่ม</button>
-            </div>
-            <div class="mini" style="margin-top:8px">พอพิมพ์เสร็จมันจะต่อท้ายในบันทึกวันนี้ให้อัตโนมัติ</div>
-          </div>
-
-          <div class="graph">
-            <div style="font-weight:950">พลังใจแบบไม่เสือก</div>
-            <div class="mini" id="motivate">—</div>
-            <div class="hr"></div>
-            <button class="btn primary" id="btnMotivate">สุ่มปลุกไฟ</button>
-          </div>
-
-          <div class="graph">
-            <div style="font-weight:950">ความปลอดภัย</div>
-            <div class="mini">ข้อมูลเก็บในเครื่องมึง (localStorage) — ไม่ส่งไปไหน</div>
-            <div class="mini">อยากย้ายเครื่องก็กด “สำรอง/นำเข้า”</div>
-          </div>
+      <div class="episode" onclick="showEpisode(2)">
+        <b>EP2:</b> กฎข้อแรก
+        <div style="color:var(--muted);font-size:13px">
+          ไม่ใช่คำขอ
         </div>
-      </aside>
+      </div>
     </div>
-  </section>
-</div>
+  </div>
 
-<div class="toast" id="toast">Saved</div>
+  <div id="reader" style="display:none">
+    <div class="card">
+      <h2 id="epTitle"></h2>
+      <div class="reader" id="epText"></div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  WAY — not public, not safe, not for everyone
+</footer>
 
 <script>
-/* =========================
-   PWA Single-file install
-========================= */
-const ICON192 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAAAwCAYAAAC0iQvNAAAACXBIWXMAAAsSAAALEgHS3X78AAABTElEQVR4nO3asU0CURSG4e8YgQmVZPpQ4nDqYF8m8mJY2p8g0oXo7QXG3w6mM2p5q7tR6j8gQmJb+gP9g1ZC4Q0k8W2m1tP9/8VQeKp8cZ5f9I2g2m6w5m4Ww3fB2c2mYJ6G3S7W5B1H9m0q5cDgF2sB6kO9v9yT2bY7wQ1eW5b3t9e2W3t8cB2g1r8hDL0s7mVbZ2rOeR0c3mQy2Ff0mZr4s6b3M0k9hPHt6cBY1u1r9J9yB1k0zSdD4k7h2t6w9m3YVhYF8BvVQw0b3j9sB3mJmJY8t4w0f4fVg7cJg9FvQe1+H1J2P9bqv2+5c1gJb8mQ7G0r8Y8n8v5oU6cKqfQAAAAAElFTkSuQmCC';
-const ICON512 = ICON192;
+const episodes = {
+  1:{
+    title:"EP1: กลับมาในห้อง",
+    text:
+`ประตูปิดลงเบาๆ  
+แต่เสียงนั้นดังในหัวริวเกินไป
 
-const manifest = {
-  name: 'EVAN VALE • Workout Hub',
-  short_name: 'Workout Hub',
-  start_url: '.',
-  display: 'standalone',
-  background_color: '#0a0f0b',
-  theme_color: '#0a0f0b',
-  icons: [
-    { src: ICON192, sizes: '192x192', type: 'image/png' },
-    { src: ICON512, sizes: '512x512', type: 'image/png' }
-  ]
+“ยังไม่นอน?”
+
+เสียงเวย์ไม่ดัง
+แต่มันไม่เคยเป็นคำถาม
+
+ริวยังนั่งอยู่ที่เดิม
+เหมือนรู้ว่า ต่อให้ขยับหนี
+ก็ไม่มีที่ไปอยู่ดี`
+  },
+  2:{
+    title:"EP2: กฎข้อแรก",
+    text:
+`“ห้ามออกไปไหน”
+
+คินพูดเหมือนบอกสภาพอากาศ
+แต่ทุกคำเหมือนล็อกประตูอีกชั้น
+
+ริวหัวเราะเบาๆ
+ทั้งที่รู้ดีว่า
+ไม่มีอะไรตลกเลย`
+  }
 };
 
-(function attachManifest(){
-  const blob = new Blob([JSON.stringify(manifest)], {type: 'application/manifest+json'});
-  const link = document.createElement('link');
-  link.rel = 'manifest';
-  link.href = URL.createObjectURL(blob);
-  document.head.appendChild(link);
-})();
-
-(async function registerSW(){
-  if (!('serviceWorker' in navigator)) return;
-  const swCode = `
-    const CACHE='ev-workout-v1';
-    self.addEventListener('install', e=>{
-      self.skipWaiting();
-      e.waitUntil(caches.open(CACHE).then(c=>c.addAll(['./'])));
-    });
-    self.addEventListener('activate', e=>e.waitUntil(self.clients.claim()));
-    self.addEventListener('fetch', e=>{
-      e.respondWith(fetch(e.request).catch(()=>caches.match('./')));
-    });
-  `;
-  const blob = new Blob([swCode], {type:'text/javascript'});
-  const swURL = URL.createObjectURL(blob);
-  try{ await navigator.serviceWorker.register(swURL,{scope:'./'}); }catch(err){ console.warn('SW failed', err); }
-})();
-
-let deferredPrompt=null;
-window.addEventListener('beforeinstallprompt', e=>{
-  e.preventDefault(); deferredPrompt=e;
-  document.getElementById('btnInstall').classList.add('primary');
-});
-document.getElementById('btnInstall').addEventListener('click', async ()=>{
-  if(!deferredPrompt){ toast('ติดตั้งไปแล้ว หรือเบราว์เซอร์ยังไม่พร้อม'); return; }
-  deferredPrompt.prompt();
-  await deferredPrompt.userChoice;
-  deferredPrompt=null;
-  document.getElementById('btnInstall').classList.remove('primary');
-});
-
-/* =========================
-   Storage + helpers
-========================= */
-const KEY='ev_workout_hub_v1';
-const $ = (id)=>document.getElementById(id);
-const todayISO = ()=> new Date().toISOString().slice(0,10);
-const fmtDate = (iso)=>{
-  const d = new Date(iso+'T00:00:00');
-  return d.toLocaleDateString('th-TH', {year:'numeric', month:'short', day:'numeric'});
-};
-function safeParse(s, fallback){ try{ return JSON.parse(s) ?? fallback }catch{ return fallback } }
-function load(){
-  const base = {
-    exercises: [],
-    days: {},      // { 'YYYY-MM-DD': {goalMin,goalSets,doneMin,doneSets,note,doneBool} }
-    stats: [],     // [{date,wKg,waist,chest,arm}]
-    ui: { tab:'today', filter:'all', statPick:'wKg' }
-  };
-  const got = safeParse(localStorage.getItem(KEY), null);
-  return got ? {...base, ...got} : base;
+function showEpisode(id){
+  document.getElementById("home").style.display="none";
+  document.getElementById("reader").style.display="block";
+  document.getElementById("epTitle").innerText=episodes[id].title;
+  document.getElementById("epText").innerText=episodes[id].text;
 }
-function save(){ localStorage.setItem(KEY, JSON.stringify(state)); }
-function toast(msg){
-  const t=$('toast');
-  t.textContent=msg;
-  t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'), 1200);
+function showHome(){
+  document.getElementById("reader").style.display="none";
+  document.getElementById("home").style.display="block";
 }
-function clamp(n,min,max){ return Math.max(min, Math.min(max,n)); }
-function esc(s){ return String(s).replace(/[&<>"']/g,c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c])) }
-
-/* =========================
-   State
-========================= */
-let state = load();
-const todayKey = todayISO();
-if(!state.days[todayKey]) state.days[todayKey] = { goalMin:0, goalSets:0, doneMin:0, doneSets:0, note:'', doneBool:false };
-save();
-
-/* =========================
-   Tabs
-========================= */
-function setTab(tab){
-  state.ui.tab=tab; save();
-  document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active', b.dataset.tab===tab));
-  ['today','plan','timer','stats','streak'].forEach(t=>{
-    $('tab-'+t).classList.toggle('hide', t!==tab);
-  });
-  if(tab==='plan') renderExercises();
-  if(tab==='stats') { renderStats(); drawChart(); }
-  if(tab==='streak') { renderCalendar(); buildAutoSummary(); }
-}
-$('tabs').addEventListener('click', (e)=>{
-  const b = e.target.closest('.tab'); if(!b) return;
-  setTab(b.dataset.tab);
-});
-
-/* =========================
-   TODAY
-========================= */
-function syncTodayUI(){
-  const d = state.days[todayKey];
-  $('goalMin').value = d.goalMin ?? 0;
-  $('goalSets').value = d.goalSets ?? 0;
-  $('doneMin').value = d.doneMin ?? 0;
-  $('doneSets').value = d.doneSets ?? 0;
-  $('todayNote').value = d.note ?? '';
-  $('todayPill').textContent = `วันนี้: ${fmtDate(todayKey)}`;
-  updateProgress();
-}
-function updateProgress(){
-  const d = state.days[todayKey];
-  const gMin = Number(d.goalMin||0), gSets = Number(d.goalSets||0);
-  const dMin = Number(d.doneMin||0), dSets = Number(d.doneSets||0);
-
-  // คิดเปอร์เซ็นต์รวมจาก 2 เป้า (ถ้าเป้าเป็น 0 ให้ไม่นับ)
-  let parts = 0, sum = 0;
-  if(gMin>0){ parts++; sum += clamp(dMin/gMin,0,1); }
-  if(gSets>0){ parts++; sum += clamp(dSets/gSets,0,1); }
-  const pct = parts? Math.round((sum/parts)*100) : 0;
-
-  $('progressTxt').textContent =
-    parts ? `ทำไป ${pct}% (นาที ${dMin}/${gMin||'-'} • เซ็ต ${dSets}/${gSets||'-'})`
-          : `ยังไม่ได้ตั้งเป้า — ตั้งก่อน จะได้รู้ว่ากำลังไปทางไหน`;
-
-  const bar = $('progressBar');
-  bar.style.width = pct+'%';
-  bar.style.background = `linear-gradient(90deg, var(--brand), var(--brand2))`;
-
-  // auto doneBool: ถ้ากรอก doneMin หรือ doneSets >0 ถือว่าทำ
-  state.days[todayKey].doneBool = (dMin>0 || dSets>0 || (d.note||'').trim().length>0);
-  save();
-}
-['goalMin','goalSets','doneMin','doneSets','todayNote'].forEach(id=>{
-  $(id).addEventListener('input', ()=>{
-    const d=state.days[todayKey];
-    d.goalMin = Number($('goalMin').value||0);
-    d.goalSets = Number($('goalSets').value||0);
-    d.doneMin = Number($('doneMin').value||0);
-    d.doneSets = Number($('doneSets').value||0);
-    d.note = $('todayNote').value||'';
-    save(); updateProgress();
-  });
-});
-
-$('btnSaveToday').addEventListener('click', ()=>{
-  const d=state.days[todayKey];
-  d.goalMin = Number($('goalMin').value||0);
-  d.goalSets = Number($('goalSets').value||0);
-  d.doneMin = Number($('doneMin').value||0);
-  d.doneSets = Number($('doneSets').value||0);
-  d.note = $('todayNote').value||'';
-  state.days[todayKey]=d; save(); updateProgress();
-  toast('บันทึกแล้ว');
-});
-
-document.addEventListener('keydown', (e)=>{
-  if((e.ctrlKey || e.metaKey) && e.key==='Enter'){
-    if(!$('tab-today').classList.contains('hide')) $('btnSaveToday').click();
-  }
-});
-
-/* =========================
-   Exercises / Plan
-========================= */
-function seedExercises(){
-  const base = [
-    {id:Date.now()+1, name:'วิดพื้น (กำแพง/เข่า/ปกติ)', type:'strength', unit:'sets_reps', target:'3x8-12'},
-    {id:Date.now()+2, name:'ดัมเบลไบเซปคาร์ล', type:'strength', unit:'sets_reps', target:'3x10'},
-    {id:Date.now()+3, name:'แพลงก์', type:'strength', unit:'seconds', target:'3x30s'},
-    {id:Date.now()+4, name:'สควอท', type:'strength', unit:'sets_reps', target:'3x12'},
-    {id:Date.now()+5, name:'โดดเชือก', type:'cardio', unit:'minutes', target:'5-10 นาที'},
-    {id:Date.now()+6, name:'ยืดสะโพก/หลัง', type:'mobility', unit:'minutes', target:'5 นาที'}
-  ];
-  // กันซ้ำ
-  const names = new Set(state.exercises.map(x=>x.name));
-  base.forEach(x=>{ if(!names.has(x.name)) state.exercises.push(x); });
-  save(); renderExercises(); toast('ใส่ท่าพื้นฐานแล้ว');
-}
-
-$('btnSeed').addEventListener('click', seedExercises);
-
-$('btnAddEx').addEventListener('click', ()=>{
-  const name = $('exName').value.trim();
-  if(!name){ toast('ใส่ชื่อท่าก่อน'); return; }
-  const ex = {
-    id: Date.now(),
-    name,
-    type: $('exType').value,
-    unit: $('exUnit').value,
-    target: $('exTarget').value.trim()
-  };
-  state.exercises.unshift(ex);
-  $('exName').value=''; $('exTarget').value='';
-  save(); renderExercises(); toast('เพิ่มท่าแล้ว');
-});
-
-$('filterType').addEventListener('change', ()=>{
-  state.ui.filter = $('filterType').value; save(); renderExercises();
-});
-
-function typeLabel(t){
-  return t==='strength'?'กล้าม/แรงต้าน': t==='cardio'?'คาร์ดิโอ':'ยืด/โมบิลิตี้';
-}
-function unitLabel(u){
-  return u==='sets_reps'?'เซ็ต/ครั้ง': u==='minutes'?'นาที':'วินาที';
-}
-
-function renderExercises(){
-  $('filterType').value = state.ui.filter || 'all';
-  const filter = $('filterType').value;
-  const list = $('exList');
-  list.innerHTML='';
-  const arr = state.exercises.filter(x=> filter==='all' ? true : x.type===filter);
-  if(!arr.length){
-    list.innerHTML = `<div class="item"><div class="name">ยังไม่มีท่า</div><div class="meta">กด “ใส่ท่าพื้นฐานให้” ก่อนก็ได้</div></div>`;
-    return;
-  }
-  arr.forEach(ex=>{
-    const el = document.createElement('div');
-    el.className='item';
-    el.innerHTML = `
-      <div class="itemhead">
-        <div>
-          <div class="name">${esc(ex.name)}</div>
-          <div class="meta">${typeLabel(ex.type)} • ${unitLabel(ex.unit)} ${ex.target? '• แนะนำ '+esc(ex.target):''}</div>
-        </div>
-        <div class="chips">
-          <button class="btn" data-act="use" data-id="${ex.id}">ใช้วันนี้</button>
-          <button class="btn ghost" data-act="del" data-id="${ex.id}">ลบ</button>
-        </div>
-      </div>
-      <div class="mini">ทิป: ถ้าท่าหนัก ให้เริ่มจาก “น้อยแต่สม่ำเสมอ” แล้วค่อยเพิ่ม</div>
-    `;
-    list.appendChild(el);
-  });
-}
-
-$('exList').addEventListener('click', (e)=>{
-  const b = e.target.closest('button'); if(!b) return;
-  const id = Number(b.dataset.id);
-  const act = b.dataset.act;
-  const ex = state.exercises.find(x=>x.id===id);
-  if(!ex) return;
-
-  if(act==='del'){
-    state.exercises = state.exercises.filter(x=>x.id!==id);
-    save(); renderExercises(); toast('ลบแล้ว');
-  }
-  if(act==='use'){
-    const line = `${ex.name}${ex.target? ' — '+ex.target:''}`;
-    appendToday(line);
-    toast('ใส่ในบันทึกวันนี้แล้ว');
-    setTab('today');
-  }
-});
-
-function appendToday(line){
-  const d = state.days[todayKey];
-  const note = (d.note||'').trim();
-  d.note = note ? (note + '\n' + line) : line;
-  state.days[todayKey]=d;
-  save();
-  $('todayNote').value = d.note;
-  updateProgress();
-}
-
-/* Quick add */
-$('btnQuickAdd').addEventListener('click', ()=>{
-  const v = $('quickText').value.trim();
-  if(!v) return;
-  appendToday(v);
-  $('quickText').value='';
-});
-
-/* =========================
-   Timer
-========================= */
-let t = { running:false, mode:'stopwatch', phase:'ready', startAt:0, elapsed:0, // ms
-          work:30, rest:15, rounds:8, longRest:0, curRound:1, curPhase:'work', phaseLeft:0, phaseTotal:0 };
-
-function fmtTime(ms){
-  const s = Math.floor(ms/1000);
-  const mm = String(Math.floor(s/60)).padStart(2,'0');
-  const ss = String(s%60).padStart(2,'0');
-  return mm+':'+ss;
-}
-function beep(){
-  if($('beepMode').value==='off') return;
-  try{
-    const ctx = new (window.AudioContext||window.webkitAudioContext)();
-    const o = ctx.createOscillator();
-    const g = ctx.createGain();
-    o.type='sine';
-    o.frequency.value=880;
-    o.connect(g); g.connect(ctx.destination);
-    g.gain.value=0.06;
-    o.start();
-    setTimeout(()=>{ o.stop(); ctx.close(); }, 120);
-  }catch{}
-}
-
-function syncTimerMode(){
-  const mode = $('timerMode').value;
-  t.mode = mode;
-  $('intervalFields').classList.toggle('hide', mode==='stopwatch');
-  if(mode==='tabata'){
-    $('workSec').value = 20;
-    $('restSec').value = 10;
-    $('rounds').value = 8;
-  }
-  if(mode==='interval'){
-    // keep user values
-  }
-  if(mode==='stopwatch'){
-    // nothing
-  }
-  resetTimer();
-}
-$('timerMode').addEventListener('change', syncTimerMode);
-
-function resetTimer(){
-  t.running=false;
-  t.elapsed=0;
-  t.startAt=0;
-  t.curRound=1;
-  t.curPhase='work';
-  t.phase='ready';
-  t.phaseLeft=0;
-  t.phaseTotal=0;
-  $('timeTxt').textContent='00:00';
-  $('phaseTxt').textContent='พร้อม';
-  $('timeBar').style.width='0%';
-  $('timeBar').style.background = `linear-gradient(90deg, var(--brand), var(--brand2))`;
-}
-$('btnResetTimer').addEventListener('click', ()=>{ resetTimer(); toast('รีเซ็ต'); });
-
-$('btnStart').addEventListener('click', ()=>{
-  if(t.running) return;
-  t.running=true;
-  t.startAt = performance.now() - t.elapsed;
-  if(t.mode==='stopwatch'){
-    t.phase='run';
-    $('phaseTxt').textContent='Stopwatch • กำลังนับ';
-  }else{
-    // interval/tabata
-    t.work = Number($('workSec').value||20);
-    t.rest = Number($('restSec').value||10);
-    t.rounds = Number($('rounds').value||8);
-    t.longRest = Number($('longRest').value||0);
-    if(t.phase==='ready'){
-      t.curRound=1;
-      t.curPhase='work';
-      t.phaseLeft=t.work*1000;
-      t.phaseTotal=t.phaseLeft;
-      $('phaseTxt').textContent=`รอบ ${t.curRound}/${t.rounds} • ทำงาน`;
-      beep();
-    }
-  }
-  loop();
-});
-$('btnPause').addEventListener('click', ()=>{
-  if(!t.running) return;
-  t.running=false;
-  toast('พัก');
-});
-
-function loop(){
-  if(!t.running) return;
-  const now = performance.now();
-  const dt = now - t.startAt;
-  t.elapsed = dt;
-
-  if(t.mode==='stopwatch'){
-    $('timeTxt').textContent = fmtTime(t.elapsed);
-    $('timeBar').style.width = '100%';
-  }else{
-    // use "phaseLeft" countdown
-    // advance by frame time: compute from last tick using dtTotal diff
-    // easier: store lastNow
-  }
-  requestAnimationFrame(loopInterval);
-}
-
-let lastFrame=0;
-function loopInterval(now){
-  if(!t.running){ lastFrame=0; return; }
-  if(!lastFrame) lastFrame = now;
-  const delta = now - lastFrame;
-  lastFrame = now;
-
-  if(t.mode==='stopwatch'){
-    $('timeTxt').textContent = fmtTime(t.elapsed);
-    $('timeBar').style.width = '100%';
-    requestAnimationFrame(loopInterval);
-    return;
-  }
-
-  t.phaseLeft -= delta;
-  if(t.phaseLeft < 0) t.phaseLeft = 0;
-
-  $('timeTxt').textContent = fmtTime(t.phaseLeft);
-  const pct = t.phaseTotal ? Math.round(((t.phaseTotal - t.phaseLeft)/t.phaseTotal)*100) : 0;
-  $('timeBar').style.width = pct+'%';
-  $('timeBar').style.background = `linear-gradient(90deg, var(--brand), var(--brand2))`;
-
-  if(t.phaseLeft<=0){
-    // change phase
-    if(t.curPhase==='work'){
-      t.curPhase='rest';
-      // long rest after every 4 rounds if set
-      const isLong = (t.longRest>0 && t.curRound%4===0 && t.curRound!==t.rounds);
-      const rest = isLong ? t.longRest : t.rest;
-      t.phaseLeft = rest*1000;
-      t.phaseTotal = t.phaseLeft;
-      $('phaseTxt').textContent = `รอบ ${t.curRound}/${t.rounds} • พัก${isLong?'ยาว':''}`;
-      beep();
-      if(rest===0){
-        // immediately proceed
-        t.phaseLeft=0;
-      }
-    }else{
-      // move to next round or finish
-      if(t.curRound >= t.rounds){
-        t.running=false;
-        $('phaseTxt').textContent='จบเซสชัน • เก่งมากไอหมา';
-        $('timeTxt').textContent='00:00';
-        $('timeBar').style.width='100%';
-        beep(); beep();
-        return;
-      }
-      t.curRound++;
-      t.curPhase='work';
-      t.phaseLeft = t.work*1000;
-      t.phaseTotal = t.phaseLeft;
-      $('phaseTxt').textContent = `รอบ ${t.curRound}/${t.rounds} • ทำงาน`;
-      beep();
-    }
-  }
-
-  requestAnimationFrame(loopInterval);
-}
-function loop(){ requestAnimationFrame(loopInterval); }
-syncTimerMode();
-
-/* =========================
-   Stats + Chart
-========================= */
-$('btnUseTodayStat').addEventListener('click', ()=>{
-  // no-op: date is always today for stat entry
-  toast('วันที่: วันนี้');
-});
-
-$('btnAddStat').addEventListener('click', ()=>{
-  const entry = {
-    date: todayKey,
-    wKg: numOrNull($('wKg').value),
-    waist: numOrNull($('waist').value),
-    chest: numOrNull($('chest').value),
-    arm: numOrNull($('arm').value)
-  };
-  // ต้องมีอย่างน้อย 1 ค่า
-  if([entry.wKg, entry.waist, entry.chest, entry.arm].every(v=>v===null)){
-    toast('ใส่สักค่า'); return;
-  }
-  // replace same date
-  state.stats = state.stats.filter(s=>s.date!==todayKey);
-  state.stats.unshift(entry);
-  save();
-  renderStats(); drawChart();
-  toast('บันทึกสถิติแล้ว');
-});
-
-function numOrNull(v){
-  const n = Number(v);
-  return Number.isFinite(n) && String(v).trim()!=='' ? n : null;
-}
-
-$('statPick').addEventListener('change', ()=>{
-  state.ui.statPick = $('statPick').value; save(); drawChart();
-});
-
-function renderStats(){
-  $('statPick').value = state.ui.statPick || 'wKg';
-  const list = $('statList');
-  list.innerHTML='';
-  if(!state.stats.length){
-    list.innerHTML = `<div class="item"><div class="name">ยังไม่มีสถิติ</div><div class="meta">กรอกน้ำหนัก/เอว/อก/แขน แล้วกดบันทึก</div></div>`;
-    $('statHint').textContent='—';
-    return;
-  }
-
-  const pick = $('statPick').value;
-  const last = state.stats[0];
-  const val = last[pick];
-  $('statHint').textContent = `ล่าสุด (${fmtDate(last.date)}): ${val ?? '—'}`;
-
-  state.stats.slice(0,10).forEach(s=>{
-    const el = document.createElement('div');
-    el.className='item';
-    el.innerHTML = `
-      <div class="itemhead">
-        <div>
-          <div class="name">${fmtDate(s.date)}</div>
-          <div class="chips">
-            ${s.wKg!=null? `<span class="chip">น้ำหนัก ${s.wKg} กก.</span>`:''}
-            ${s.waist!=null? `<span class="chip">เอว ${s.waist} ซม.</span>`:''}
-            ${s.chest!=null? `<span class="chip">อก ${s.chest} ซม.</span>`:''}
-            ${s.arm!=null? `<span class="chip">แขน ${s.arm} ซม.</span>`:''}
-          </div>
-        </div>
-        <button class="btn ghost" data-del="${s.date}">ลบ</button>
-      </div>
-    `;
-    list.appendChild(el);
-  });
-}
-$('statList').addEventListener('click', (e)=>{
-  const b = e.target.closest('button'); if(!b) return;
-  const date = b.dataset.del; if(!date) return;
-  state.stats = state.stats.filter(s=>s.date!==date);
-  save(); renderStats(); drawChart(); toast('ลบแล้ว');
-});
-
-function drawChart(){
-  const pick = $('statPick').value;
-  const data = state.stats
-    .filter(s=>s[pick]!=null)
-    .slice(0,14)
-    .reverse();
-
-  const svg = $('svgChart');
-  svg.innerHTML = '';
-
-  if(data.length<2){
-    svg.innerHTML = `<text x="12" y="70" fill="rgba(255,255,255,.55)" font-size="12">ข้อมูลยังน้อยไป — บันทึกอีกนิด</text>`;
-    return;
-  }
-
-  const vals = data.map(d=>d[pick]);
-  const min = Math.min(...vals);
-  const max = Math.max(...vals);
-  const pad = (max-min)*0.15 || 1;
-  const lo = min - pad, hi = max + pad;
-
-  const W=320, H=140;
-  const left=10, right=10, top=12, bottom=18;
-  const w = W-left-right, h=H-top-bottom;
-
-  const x = (i)=> left + (i/(data.length-1))*w;
-  const y = (v)=> top + (1-((v-lo)/(hi-lo)))*h;
-
-  // grid lines
-  for(let k=0;k<4;k++){
-    const yy = top + (k/3)*h;
-    const line = document.createElementNS('http://www.w3.org/2000/svg','line');
-    line.setAttribute('x1','10'); line.setAttribute('x2','310');
-    line.setAttribute('y1',yy); line.setAttribute('y2',yy);
-    line.setAttribute('stroke','rgba(255,255,255,.08)');
-    svg.appendChild(line);
-  }
-
-  // path
-  let d = `M ${x(0)} ${y(vals[0])}`;
-  vals.forEach((v,i)=>{ if(i>0) d += ` L ${x(i)} ${y(v)}`; });
-
-  const path = document.createElementNS('http://www.w3.org/2000/svg','path');
-  path.setAttribute('d', d);
-  path.setAttribute('fill','none');
-  path.setAttribute('stroke','rgba(255,255,255,.9)');
-  path.setAttribute('stroke-width','2.2');
-  path.setAttribute('stroke-linecap','round');
-  path.setAttribute('stroke-linejoin','round');
-  svg.appendChild(path);
-
-  // dots
-  vals.forEach((v,i)=>{
-    const c = document.createElementNS('http://www.w3.org/2000/svg','circle');
-    c.setAttribute('cx', x(i));
-    c.setAttribute('cy', y(v));
-    c.setAttribute('r','3.2');
-    c.setAttribute('fill','rgba(255,255,255,.95)');
-    svg.appendChild(c);
-  });
-
-  // labels
-  const t1 = document.createElementNS('http://www.w3.org/2000/svg','text');
-  t1.setAttribute('x','10'); t1.setAttribute('y','136');
-  t1.setAttribute('fill','rgba(255,255,255,.55)');
-  t1.setAttribute('font-size','10');
-  t1.textContent = fmtDate(data[0].date);
-  svg.appendChild(t1);
-
-  const t2 = document.createElementNS('http://www.w3.org/2000/svg','text');
-  t2.setAttribute('x','310'); t2.setAttribute('y','136');
-  t2.setAttribute('text-anchor','end');
-  t2.setAttribute('fill','rgba(255,255,255,.55)');
-  t2.setAttribute('font-size','10');
-  t2.textContent = fmtDate(data[data.length-1].date);
-  svg.appendChild(t2);
-}
-
-/* =========================
-   Streak Calendar (last 28 days)
-========================= */
-function renderCalendar(){
-  const cal = $('cal');
-  cal.innerHTML='';
-  const now = new Date();
-  const days = [];
-  for(let i=27;i>=0;i--){
-    const d = new Date(now);
-    d.setDate(d.getDate()-i);
-    const iso = d.toISOString().slice(0,10);
-    days.push({iso, d});
-  }
-
-  let monthDone=0;
-  const month = now.getMonth();
-  days.forEach(({iso,d})=>{
-    const cell = document.createElement('div');
-    cell.className='day';
-    const isToday = iso===todayKey;
-    if(isToday) cell.classList.add('today');
-
-    const done = !!(state.days[iso]?.doneBool);
-    if(done) cell.classList.add('done');
-
-    if(d.getMonth()===month && done) monthDone++;
-
-    cell.title = fmtDate(iso);
-    cell.innerHTML = `<div style="font-weight:900">${d.getDate()}</div><div style="opacity:.7">${['อา','จ','อ','พ','พฤ','ศ','ส'][d.getDay()]}</div>`;
-    cell.addEventListener('click', ()=>{
-      if(!state.days[iso]) state.days[iso]={goalMin:0,goalSets:0,doneMin:0,doneSets:0,note:'',doneBool:false};
-      state.days[iso].doneBool = !state.days[iso].doneBool;
-      save(); renderCalendar(); buildAutoSummary();
-    });
-    cal.appendChild(cell);
-  });
-
-  $('monthDone').textContent = monthDone;
-
-  // streak now
-  let streak=0;
-  for(let i=0;i<365;i++){
-    const d = new Date();
-    d.setDate(d.getDate()-i);
-    const iso = d.toISOString().slice(0,10);
-    const done = !!(state.days[iso]?.doneBool);
-    if(done) streak++; else break;
-  }
-  $('streakNow').textContent = streak;
-}
-
-function buildAutoSummary(){
-  // เอา note ทุกวัน 28 วันล่าสุด มานับคำบ่อย ๆ แบบบ้าน ๆ
-  const now = new Date();
-  const bag = {};
-  for(let i=0;i<28;i++){
-    const d = new Date(now);
-    d.setDate(d.getDate()-i);
-    const iso = d.toISOString().slice(0,10);
-    const note = (state.days[iso]?.note||'').toLowerCase();
-    note.split(/[\n,•\-\/]+/).map(s=>s.trim()).filter(Boolean).forEach(line=>{
-      const key = line.slice(0,40);
-      bag[key] = (bag[key]||0)+1;
-    });
-  }
-  const top = Object.entries(bag).sort((a,b)=>b[1]-a[1]).slice(0,8);
-  $('autoSummary').value = top.length
-    ? top.map(([k,v],i)=>`${i+1}) ${k}  (x${v})`).join('\n')
-    : 'ยังไม่มีบันทึกพอให้สรุป';
-}
-
-/* =========================
-   Motivation (fun)
-========================= */
-const motes = [
-  "วันนี้ไม่ต้องโหด—แค่ทำให้ได้ 10 นาทีพอ เดี๋ยวมันต่อเอง",
-  "มึงไม่ต้องมีแรงจูงใจหรอก แค่เริ่มก่อน 60 วินาที",
-  "คุมวินัย > คุมอารมณ์ เอาให้จบเซ็ตเดียวก็ชนะแล้ว",
-  "เหนื่อยได้ แต่อย่าหยุดนาน ไอหมา",
-  "เป้าคือ ‘สม่ำเสมอ’ ไม่ใช่ ‘สมบูรณ์แบบ’",
-  "โดดเชือก 3 นาที ยังดีกว่าไม่ทำเลย—ไป",
-  "วันนี้ทำเบา ๆ ก็ยังนับว่าโคตรเก่ง"
-];
-function setMotivation(){
-  $('motivate').textContent = motes[Math.floor(Math.random()*motes.length)];
-}
-$('btnMotivate').addEventListener('click', setMotivation);
-
-/* =========================
-   Export / Import / Reset
-========================= */
-function toBlob(data){ return new Blob([JSON.stringify(data,null,2)],{type:'application/json'}); }
-$('btnExport').addEventListener('click', ()=>{
-  const a=document.createElement('a');
-  a.href=URL.createObjectURL(toBlob(state));
-  a.download='ev-workout-backup.json';
-  a.click();
-  toast('สำรองแล้ว');
-});
-$('importFile').addEventListener('change', async (e)=>{
-  const f=e.target.files[0]; if(!f) return;
-  try{
-    const txt = await f.text();
-    const obj = JSON.parse(txt);
-    if(!obj || typeof obj!=='object') throw new Error('bad');
-    state = {...load(), ...obj};
-    save();
-    boot();
-    toast('นำเข้าแล้ว');
-  }catch(err){
-    toast('ไฟล์ไม่ถูกต้อง');
-  }finally{
-    e.target.value='';
-  }
-});
-$('btnReset').addEventListener('click', ()=>{
-  if(confirm('ล้างข้อมูลทั้งหมดบนเครื่องนี้?')){
-    localStorage.removeItem(KEY);
-    state = load();
-    if(!state.days[todayKey]) state.days[todayKey] = { goalMin:0, goalSets:0, doneMin:0, doneSets:0, note:'', doneBool:false };
-    save();
-    boot();
-    toast('ล้างแล้ว');
-  }
-});
-
-/* =========================
-   Boot
-========================= */
-function boot(){
-  // restore UI state
-  $('filterType').value = state.ui.filter || 'all';
-  $('statPick').value = state.ui.statPick || 'wKg';
-  syncTodayUI();
-  renderExercises();
-  renderStats();
-  drawChart();
-  renderCalendar();
-  buildAutoSummary();
-  setMotivation();
-  setTab(state.ui.tab || 'today');
-}
-boot();
 </script>
 </body>
 </html>
