@@ -1,200 +1,617 @@
 <!doctype html>
-<html lang="th">
+<html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>WAY — Private Archive</title>
-<style>
-:root{
-  --bg:#06080f;
-  --card:#0c1122cc;
-  --text:#e9eeff;
-  --muted:#9aa6d6;
-  --neon:#7c5cff;
-  --neon2:#15e3ff;
-}
-*{box-sizing:border-box}
-body{
-  margin:0;
-  font-family:system-ui,-apple-system,Segoe UI,Roboto;
-  color:var(--text);
-  background:
-    radial-gradient(800px 400px at 10% 10%, rgba(124,92,255,.25), transparent 60%),
-    radial-gradient(800px 400px at 90% 20%, rgba(21,227,255,.18), transparent 60%),
-    var(--bg);
-}
-header{
-  padding:20px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  backdrop-filter: blur(10px);
-}
-.logo{
-  font-weight:900;
-  letter-spacing:2px;
-}
-nav a{
-  color:var(--text);
-  text-decoration:none;
-  margin-left:14px;
-  padding:8px 14px;
-  border:1px solid rgba(255,255,255,.15);
-  border-radius:999px;
-}
-main{
-  max-width:900px;
-  margin:auto;
-  padding:20px;
-}
-.card{
-  background:var(--card);
-  border:1px solid rgba(255,255,255,.12);
-  border-radius:18px;
-  padding:20px;
-  margin-bottom:16px;
-}
-h1{margin-top:0}
-.episode{
-  padding:14px;
-  border-radius:14px;
-  border:1px solid rgba(255,255,255,.12);
-  margin-bottom:10px;
-  cursor:pointer;
-}
-.episode:hover{
-  box-shadow:0 0 0 3px rgba(124,92,255,.2);
-}
-.reader{
-  white-space:pre-wrap;
-  line-height:1.9;
-  font-size:18px;
-}
-footer{
-  text-align:center;
-  color:var(--muted);
-  font-size:12px;
-  padding:20px;
-}
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>EVAN VALE — American Bike Culture</title>
+  <meta name="description" content="EVAN VALE — American Bike Culture. Build logs, rides, gear, and the Garage Vision." />
+  <style>
+    :root{
+      --bg:#07080d;
+      --text:#eaf0ff;
+      --muted:#a8b3d6;
+      --card:rgba(10,14,24,.72);
+      --stroke:rgba(255,255,255,.10);
+      --shadow: 0 18px 60px rgba(0,0,0,.55);
+
+      --neon1:#7c5cff; /* purple */
+      --neon2:#15e3ff; /* cyan */
+
+      --sand1:#ffb86b;
+      --sand2:#e55d2a;
+      --sand3:#6b2d17;
+      --radius:22px;
+      --max:1100px;
+      --font: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:var(--font);
+      color:var(--text);
+      background: radial-gradient(1200px 700px at 10% 10%, rgba(124,92,255,.18), transparent 60%),
+                  radial-gradient(1200px 700px at 90% 15%, rgba(21,227,255,.14), transparent 60%),
+                  radial-gradient(1200px 900px at 50% 110%, rgba(255,184,107,.12), transparent 60%),
+                  var(--bg);
+      overflow-x:hidden;
+    }
+
+    /* ===== Background layers (Desert + Neon) ===== */
+    .bg{
+      position:fixed; inset:0;
+      pointer-events:none;
+      z-index:-2;
+    }
+    .bg::before{
+      content:"";
+      position:absolute; inset:-20%;
+      background:
+        radial-gradient(600px 280px at 12% 72%, rgba(255,184,107,.16), transparent 60%),
+        radial-gradient(650px 320px at 80% 70%, rgba(229,93,42,.14), transparent 60%),
+        radial-gradient(900px 420px at 55% 45%, rgba(107,45,23,.10), transparent 62%);
+      filter:saturate(1.1);
+      transform: rotate(-2deg);
+    }
+    .grain{
+      position:fixed; inset:0;
+      pointer-events:none;
+      z-index:-1;
+      opacity:.16;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)' opacity='.35'/%3E%3C/svg%3E");
+      mix-blend-mode: overlay;
+    }
+
+    /* Highway line */
+    .highway{
+      position:fixed;
+      left:50%; top:-10vh;
+      width:min(920px, 140vw);
+      height:140vh;
+      transform:translateX(-50%) perspective(900px) rotateX(45deg);
+      border-radius:40px;
+      background: linear-gradient(90deg,
+        transparent 0%,
+        rgba(255,255,255,.06) 8%,
+        rgba(255,255,255,.03) 20%,
+        rgba(255,255,255,.02) 50%,
+        rgba(255,255,255,.03) 80%,
+        rgba(255,255,255,.06) 92%,
+        transparent 100%
+      );
+      box-shadow: 0 0 0 1px rgba(255,255,255,.03);
+      z-index:-1;
+      opacity:.55;
+      pointer-events:none;
+    }
+    .highway::after{
+      content:"";
+      position:absolute; inset:0;
+      background:
+        repeating-linear-gradient(to bottom,
+          rgba(255,184,107,.0) 0px,
+          rgba(255,184,107,.0) 22px,
+          rgba(255,184,107,.24) 22px,
+          rgba(255,184,107,.24) 38px,
+          rgba(255,184,107,.0) 38px,
+          rgba(255,184,107,.0) 90px
+        );
+      filter: blur(.2px);
+      opacity:.35;
+      mask-image: linear-gradient(to bottom, transparent 0%, black 14%, black 80%, transparent 100%);
+    }
+
+    /* ===== Layout ===== */
+    .wrap{max-width:var(--max); margin:0 auto; padding:18px}
+    .topbar{
+      position:sticky; top:0; z-index:50;
+      padding:14px 18px;
+      backdrop-filter: blur(14px);
+      background: linear-gradient(to bottom, rgba(0,0,0,.55), rgba(0,0,0,.15));
+      border-bottom:1px solid rgba(255,255,255,.06);
+    }
+    .topbarInner{
+      max-width:var(--max);
+      margin:0 auto;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+    }
+
+    .brand{
+      display:flex; align-items:center; gap:12px;
+      min-width: 220px;
+    }
+    .mark{
+      width:44px; height:44px; border-radius:16px;
+      display:grid; place-items:center;
+      font-weight:900; letter-spacing:1px;
+      color:var(--text);
+      background:
+        radial-gradient(30px 30px at 30% 30%, rgba(124,92,255,.40), transparent 60%),
+        radial-gradient(30px 30px at 70% 70%, rgba(21,227,255,.28), transparent 60%),
+        rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.12);
+      box-shadow: var(--shadow);
+    }
+    .brandText .name{
+      font-weight:900;
+      letter-spacing:2px;
+      text-transform:uppercase;
+      font-size:14px;
+      line-height:1.1;
+    }
+    .brandText .tag{
+      color:var(--muted);
+      font-size:12px;
+      margin-top:2px;
+      letter-spacing:.4px;
+      white-space:nowrap;
+    }
+
+    .nav{
+      display:flex; align-items:center; gap:10px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+    .pill{
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.18);
+      color:var(--text);
+      padding:10px 12px;
+      border-radius:999px;
+      text-decoration:none;
+      cursor:pointer;
+      font-weight:700;
+      letter-spacing:.3px;
+      font-size:13px;
+      transition: transform .15s ease, box-shadow .15s ease;
+    }
+    .pill:hover{
+      transform: translateY(-1px);
+      box-shadow: 0 0 0 4px rgba(124,92,255,.10);
+    }
+    .pill.neon{
+      background:
+        radial-gradient(120px 60px at 20% 10%, rgba(124,92,255,.22), transparent 60%),
+        radial-gradient(120px 60px at 85% 80%, rgba(21,227,255,.18), transparent 60%),
+        rgba(255,255,255,.06);
+    }
+
+    .hero{
+      margin-top:16px;
+      border-radius: calc(var(--radius) + 6px);
+      border:1px solid rgba(255,255,255,.10);
+      background:
+        radial-gradient(700px 320px at 8% 18%, rgba(255,184,107,.18), transparent 60%),
+        radial-gradient(700px 320px at 92% 22%, rgba(124,92,255,.18), transparent 60%),
+        radial-gradient(700px 320px at 55% 95%, rgba(21,227,255,.12), transparent 60%),
+        rgba(255,255,255,.04);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .heroInner{
+      display:grid;
+      grid-template-columns: 1.35fr .65fr;
+      gap:16px;
+      padding:22px;
+    }
+
+    .headline{
+      margin:0;
+      font-size: clamp(28px, 4vw, 44px);
+      letter-spacing: .5px;
+      line-height: 1.05;
+      text-transform: uppercase;
+    }
+    .subhead{
+      margin:10px 0 0;
+      color:var(--muted);
+      line-height:1.6;
+      max-width: 58ch;
+      font-size: 15px;
+    }
+    .heroActions{
+      display:flex; gap:10px; flex-wrap:wrap;
+      margin-top:16px;
+    }
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center;
+      padding:11px 14px;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.12);
+      background:
+        linear-gradient(135deg, rgba(124,92,255,.22), rgba(21,227,255,.16));
+      color:var(--text);
+      text-decoration:none;
+      font-weight:900;
+      letter-spacing:.5px;
+      transition: transform .15s ease, box-shadow .15s ease;
+    }
+    .btn:hover{
+      transform: translateY(-1px);
+      box-shadow: 0 0 0 4px rgba(21,227,255,.10);
+    }
+    .btn.ghost{
+      background: rgba(0,0,0,.12);
+      color:var(--text);
+    }
+
+    .heroCard{
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.14);
+      border-radius: 22px;
+      padding:16px;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      gap:12px;
+    }
+    .kpi{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:10px;
+    }
+    .kpiBox{
+      border-radius:18px;
+      padding:12px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.05);
+    }
+    .kpiNum{
+      font-size:22px;
+      font-weight:1000;
+      letter-spacing:.6px;
+    }
+    .kpiLab{
+      font-size:12px;
+      color:var(--muted);
+      margin-top:2px;
+    }
+    .chiprow{
+      display:flex; flex-wrap:wrap; gap:8px;
+      margin-top:8px;
+    }
+    .chip{
+      border-radius:999px;
+      padding:8px 10px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.12);
+      font-weight:800;
+      font-size:12px;
+      color:var(--muted);
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap:14px;
+      margin-top:14px;
+    }
+    .card{
+      border-radius: var(--radius);
+      border:1px solid rgba(255,255,255,.10);
+      background: var(--card);
+      box-shadow: var(--shadow);
+      padding:18px;
+      overflow:hidden;
+    }
+    .card h3{margin:0 0 8px; letter-spacing:.5px}
+    .muted{color:var(--muted); line-height:1.65}
+    .tiny{font-size:12px}
+    .line{
+      height:1px;
+      background: rgba(255,255,255,.10);
+      margin:14px 0;
+    }
+    .list{
+      display:flex; flex-direction:column; gap:10px;
+      margin-top:10px;
+    }
+    .item{
+      padding:12px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.10);
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+      transition: transform .15s ease, box-shadow .15s ease;
+    }
+    .item:hover{
+      transform: translateY(-1px);
+      box-shadow: 0 0 0 4px rgba(124,92,255,.10);
+    }
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      border-radius:999px;
+      padding:6px 9px;
+      border:1px solid rgba(255,255,255,.12);
+      color:var(--muted);
+      font-size:12px;
+      font-weight:800;
+      margin-right:6px;
+      background: rgba(255,255,255,.04);
+    }
+    .badge i{
+      width:8px; height:8px;
+      border-radius:99px;
+      background: linear-gradient(135deg, rgba(255,184,107,.9), rgba(21,227,255,.8));
+      display:inline-block;
+      box-shadow:0 0 0 3px rgba(255,184,107,.08);
+    }
+
+    .sectionTitle{
+      margin:0 0 10px;
+      font-size: 18px;
+      letter-spacing: .6px;
+      text-transform: uppercase;
+    }
+
+    .footer{
+      padding:18px 0 28px;
+      text-align:center;
+      color:var(--muted);
+      font-size:12px;
+      letter-spacing:.4px;
+    }
+
+    /* Responsive */
+    @media (max-width: 980px){
+      .heroInner{grid-template-columns:1fr}
+      .grid{grid-template-columns:1fr}
+      .brandText .tag{display:none}
+    }
+
+    /* Accent underline */
+    .glow{
+      display:inline-block;
+      background: linear-gradient(90deg, rgba(255,184,107,.25), rgba(124,92,255,.18), rgba(21,227,255,.16));
+      padding: 2px 10px 3px;
+      border-radius: 999px;
+      border:1px solid rgba(255,255,255,.08);
+      box-shadow: 0 0 0 4px rgba(255,184,107,.06);
+      margin-left:6px;
+      transform: translateY(-1px);
+    }
+  </style>
 </head>
 
 <body>
-<header>
-  <div class="logo">WAY</div>
-  <nav>
-    <a href="#" onclick="showHome()">HOME</a>
-    <a href="#" onclick="showEpisode(1)">READ</a>
-  </nav>
-</header>
+  <div class="bg"></div>
+  <div class="grain"></div>
+  <div class="highway"></div>
 
-<main>
-  <div id="home">
-    <div class="card">
-      <h1>Private Archive</h1>
-      <p style="color:var(--muted)">
-        ห้องส่วนตัวของริว  
-        ที่เก็บเรื่องที่ไม่จำเป็นต้องมีใครเข้าใจ
-      </p>
-    </div>
-
-    <div class="card">
-      <h2>Episodes</h2>
-
-      <div class="episode" onclick="showEpisode(1)">
-        <b>EP1:</b> กลับมาในห้อง
-        <div style="color:var(--muted);font-size:13px">
-          จุดเริ่มที่ไม่มีใครถอย
+  <header class="topbar">
+    <div class="topbarInner">
+      <div class="brand">
+        <div class="mark">EV</div>
+        <div class="brandText">
+          <div class="name">EVAN VALE</div>
+          <div class="tag">American Bike Culture • Desert Runs • Neon Garage</div>
         </div>
       </div>
 
-      <div class="episode" onclick="showEpisode(2)">
-        <b>EP2:</b> กฎข้อแรก
-        <div style="color:var(--muted);font-size:13px">
-          ไม่ใช่คำขอ
+      <nav class="nav">
+        <a class="pill" href="#builds">Build Log</a>
+        <a class="pill" href="#rides">Rides</a>
+        <a class="pill" href="#gear">Gear</a>
+        <a class="pill neon" href="#vision">Garage Vision</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="hero" id="top">
+      <div class="heroInner">
+        <div>
+          <h1 class="headline">American Bike Culture <span class="glow">EVAN VALE</span></h1>
+          <p class="subhead">
+            Desert highway attitude + neon garage grit.
+            This is a personal brand page built for the future — builds, rides, and the vision of a modern American-style garage in Thailand.
+          </p>
+
+          <div class="heroActions">
+            <a class="btn" href="#builds">Explore Builds</a>
+            <a class="btn ghost" href="#vision">See the Vision</a>
+          </div>
+
+          <div class="chiprow">
+            <span class="chip">DARK • NEON</span>
+            <span class="chip">DESERT RUNS</span>
+            <span class="chip">BUILD LOG</span>
+            <span class="chip">CONTENT READY</span>
+          </div>
+        </div>
+
+        <aside class="heroCard">
+          <div>
+            <div class="sectionTitle">Brand Snapshot</div>
+            <div class="kpi">
+              <div class="kpiBox">
+                <div class="kpiNum" id="kpiBuilds">03</div>
+                <div class="kpiLab">Build Notes</div>
+              </div>
+              <div class="kpiBox">
+                <div class="kpiNum" id="kpiRides">02</div>
+                <div class="kpiLab">Ride Logs</div>
+              </div>
+              <div class="kpiBox">
+                <div class="kpiNum">USA</div>
+                <div class="kpiLab">Aesthetic</div>
+              </div>
+              <div class="kpiBox">
+                <div class="kpiNum">Rayong</div>
+                <div class="kpiLab">Home Base</div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div class="line"></div>
+            <div class="muted tiny">
+              “Build it like a garage. Ride it like a highway.”
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="grid">
+      <div class="card">
+        <h3>Who This Is</h3>
+        <p class="muted">
+          A future-facing bike brand page — made for content, projects, and the garage dream.
+          Keep it simple now, scale it later.
+        </p>
+        <div class="line"></div>
+        <div class="muted tiny">
+          Replace this text with your real intro when ready.
         </div>
       </div>
+
+      <div class="card">
+        <h3>Brand Voice</h3>
+        <p class="muted">
+          Quiet confidence. Heavy grit. No cringe.
+          English-first headings, Thai-friendly details, like a real American garage page.
+        </p>
+        <div class="line"></div>
+        <span class="badge"><i></i>DESERT</span>
+        <span class="badge"><i></i>NEON</span>
+        <span class="badge"><i></i>GARAGE</span>
+      </div>
+
+      <div class="card">
+        <h3>CTA Targets</h3>
+        <p class="muted">
+          Hook people fast: builds, rides, gear. Then convert to follows, DMs, or future garage bookings.
+        </p>
+        <div class="line"></div>
+        <div class="muted tiny">Buttons are placeholders—swap to your TikTok/IG/YouTube links.</div>
+      </div>
+    </section>
+
+    <section class="card" id="builds" style="margin-top:14px;">
+      <h2 class="sectionTitle">Build Log</h2>
+      <p class="muted">Short, clean entries that look like a real brand. Add photos later.</p>
+
+      <div class="list">
+        <div class="item">
+          <div>
+            <div><strong>Build #01 — Street Setup</strong></div>
+            <div class="muted tiny">Suspension check • brake feel • daily ride comfort</div>
+            <div style="margin-top:8px">
+              <span class="badge"><i></i>notes</span>
+              <span class="badge"><i></i>street</span>
+            </div>
+          </div>
+          <div class="muted tiny">Draft →</div>
+        </div>
+
+        <div class="item">
+          <div>
+            <div><strong>Build #02 — Night Neon Aesthetic</strong></div>
+            <div class="muted tiny">Lighting mood • decals • dark theme photography</div>
+            <div style="margin-top:8px">
+              <span class="badge"><i></i>visual</span>
+              <span class="badge"><i></i>night</span>
+            </div>
+          </div>
+          <div class="muted tiny">Draft →</div>
+        </div>
+
+        <div class="item">
+          <div>
+            <div><strong>Build #03 — Long Ride Prep</strong></div>
+            <div class="muted tiny">Chain • tire pressure • tool roll • hydration kit</div>
+            <div style="margin-top:8px">
+              <span class="badge"><i></i>prep</span>
+              <span class="badge"><i></i>highway</span>
+            </div>
+          </div>
+          <div class="muted tiny">Draft →</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="grid" style="margin-top:14px;">
+      <div class="card" id="rides">
+        <h2 class="sectionTitle">Rides</h2>
+        <p class="muted">Desert mindset—even if it’s Thailand roads. Log the vibe.</p>
+        <div class="line"></div>
+        <div class="list">
+          <div class="item">
+            <div>
+              <div><strong>Ride #01 — Midnight Run</strong></div>
+              <div class="muted tiny">quiet roads • neon reflections • calm speed</div>
+            </div>
+            <div class="muted tiny">Log →</div>
+          </div>
+          <div class="item">
+            <div>
+              <div><strong>Ride #02 — Sunrise Highway</strong></div>
+              <div class="muted tiny">warm light • sand-tone edits • smooth throttle</div>
+            </div>
+            <div class="muted tiny">Log →</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" id="gear">
+        <h2 class="sectionTitle">Gear</h2>
+        <p class="muted">Keep it tight: only what you actually use.</p>
+        <div class="line"></div>
+        <div class="list">
+          <div class="item">
+            <div>
+              <div><strong>Helmet Setup</strong></div>
+              <div class="muted tiny">visor care • pinlock • comms (optional)</div>
+            </div>
+            <div class="muted tiny">Spec →</div>
+          </div>
+          <div class="item">
+            <div>
+              <div><strong>Tool Roll</strong></div>
+              <div class="muted tiny">basic sockets • zip ties • chain lube</div>
+            </div>
+            <div class="muted tiny">Spec →</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" id="vision">
+        <h2 class="sectionTitle">Garage Vision</h2>
+        <p class="muted">
+          EVAN VALE GARAGE — modern American-style shop: dark tone, neon typography, clean service.
+          This page becomes the front door later.
+        </p>
+        <div class="line"></div>
+        <div class="muted tiny">
+          Next step: add 1 hero photo, 6 build photos, and a single “About Ryu” paragraph.
+        </div>
+        <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
+          <a class="btn" href="#top">Back to Top</a>
+          <a class="btn ghost" href="javascript:void(0)" id="fakeSocial">Connect Socials</a>
+        </div>
+      </div>
+    </section>
+
+    <div class="footer">
+      © EVAN VALE — built for the future • desert energy, neon garage
     </div>
-  </div>
+  </main>
 
-  <div id="reader" style="display:none">
-    <div class="card">
-      <h2 id="epTitle"></h2>
-      <div class="reader" id="epText"></div>
-    </div>
-  </div>
-</main>
-
-<footer>
-  WAY — not public, not safe, not for everyone
-</footer>
-
-<script>
-const episodes = {
-  1:{
-    title:"EP1:ห้องนั่งเล่นหลังเที่ยงคืน ",
-    text:
-`ฉากเปิด
-เสียงประตูบ้านเปิดแอ๊ด ริวเหยียบเข้าไปในบ้านไอเวย์แบบไม่ทันได้ดูเวลา มือถือยังโชว์เวลาว่า "23:42"
-
-“เฮ้เวย์! กูเอาของมาส่ง—”
-ริวพูดไม่ทันจบ แสงจากโถงห้องมืดข้างในวาบขึ้นสลัวๆ มีแต่เงาคนยืนพิงขอบประตูทางเดิน ใส่หมวกกันน็อคเต็มใบแบบในคลิป
-"กูเรียกกี่โมงให้มึงมาถึง?" เสียงมันต่ำเย็นชา
-
-“เอ้า ก็แค่มาช้าไปนิดด—”
-
-ตุ้บ!
-ริวยังไม่ทันตั้งตัว มือเวย์ดันไหล่แรงๆ จนหลังติดผนัง แรงกระแทกไม่ได้เจ็บมาก แต่พอรวมกับเสียงหายใจในหมวกกันน็อค มันโคตรกดดัน
-
-“กูบอกว่าหลังห้าทุ่มอย่ามา แล้วมึงมาทำไม?”
-
-“ก็แค่คิดถึงไงมึง…” ริวเหยียดยิ้ม กวนประสาทแก้เขิน แต่ยิ่งพูดแม่งยิ่งแย่
-
-เวย์ไม่พูด แค่ยืนนิ่งแล้วหมุนข้อมือเหมือนจะซ้อมต่อย
-จากในเงาด้านหลัง มีไอคินเดินออกมา ยืนกอดอกพิงประตูหลังมืดๆ หัวเอียงนิดๆ
-
-“มึงจีบพี่กูตอนห้าทุ่มกว่า มึงไม่รอดแน่...” คินพูดนิ่งๆ ดวงตาคมๆ ภายใต้เงาหมวกกันน็อคสะท้อนแสงไฟจากห้องนั่งเล่นเบาๆ
-
-ฉากต่อไป
-ริวโดนจับกดให้นั่งกับพื้น มือเวย์ยันผนังไว้ข้างหู สายตาทะลุหมวกแบบรู้ทันทุกอย่าง
-
-“กูถามอีกที มึงมาทำไม?”
-
-“ก็… ก็อยากเห็นมึงก่อนนอน…”
-
-“แน่ใจนะว่าแค่นั้น?” เวย์ถามเสียงต่ำ
-
-“…”
-ริวเงียบไปชั่วครู่ก่อนจะหลุดขำเบาๆ
-“ก็อยากโดนคุมบ้างไงมึง”
-
-เวย์กับคินมองหน้ากัน แล้วเวย์ยิ้มมุมปาก
-“งั้นคืนนี้... มึงได้สมใจแน่ไอหมา”`
-  },
-  2:{
-    title:"EP2: กฎข้อแรก",
-    text:
-`“ห้ามออกไปไหน”
-
-คินพูดเหมือนบอกสภาพอากาศ
-แต่ทุกคำเหมือนล็อกประตูอีกชั้น
-
-ริวหัวเราะเบาๆ
-ทั้งที่รู้ดีว่า
-ไม่มีอะไรตลกเลย`
-  }
-};
-
-function showEpisode(id){
-  document.getElementById("home").style.display="none";
-  document.getElementById("reader").style.display="block";
-  document.getElementById("epTitle").innerText=episodes[id].title;
-  document.getElementById("epText").innerText=episodes[id].text;
-}
-function showHome(){
-  document.getElementById("reader").style.display="none";
-  document.getElementById("home").style.display="block";
-}
-</script>
+  <script>
+    // tiny interaction (placeholder)
+    document.getElementById("fakeSocial").addEventListener("click", () => {
+      alert("Swap this button to your TikTok / IG / YouTube links. Brand-ready.");
+    });
+  </script>
 </body>
 </html>
