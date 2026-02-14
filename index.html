@@ -1,617 +1,200 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>EVAN VALE — American Bike Culture</title>
-  <meta name="description" content="EVAN VALE — American Bike Culture. Build logs, rides, gear, and the Garage Vision." />
-  <style>
-    :root{
-      --bg:#07080d;
-      --text:#eaf0ff;
-      --muted:#a8b3d6;
-      --card:rgba(10,14,24,.72);
-      --stroke:rgba(255,255,255,.10);
-      --shadow: 0 18px 60px rgba(0,0,0,.55);
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ryu | American Garage Apprentice</title>
 
-      --neon1:#7c5cff; /* purple */
-      --neon2:#15e3ff; /* cyan */
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family: 'Segoe UI', sans-serif;
+}
 
-      --sand1:#ffb86b;
-      --sand2:#e55d2a;
-      --sand3:#6b2d17;
-      --radius:22px;
-      --max:1100px;
-      --font: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
-    }
+body{
+    background:#0c0f16;
+    color:white;
+    line-height:1.6;
+}
 
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0;
-      font-family:var(--font);
-      color:var(--text);
-      background: radial-gradient(1200px 700px at 10% 10%, rgba(124,92,255,.18), transparent 60%),
-                  radial-gradient(1200px 700px at 90% 15%, rgba(21,227,255,.14), transparent 60%),
-                  radial-gradient(1200px 900px at 50% 110%, rgba(255,184,107,.12), transparent 60%),
-                  var(--bg);
-      overflow-x:hidden;
-    }
+header{
+    height:100vh;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    padding:0 10%;
+    background:linear-gradient(to right,#000 40%,#111827);
+}
 
-    /* ===== Background layers (Desert + Neon) ===== */
-    .bg{
-      position:fixed; inset:0;
-      pointer-events:none;
-      z-index:-2;
-    }
-    .bg::before{
-      content:"";
-      position:absolute; inset:-20%;
-      background:
-        radial-gradient(600px 280px at 12% 72%, rgba(255,184,107,.16), transparent 60%),
-        radial-gradient(650px 320px at 80% 70%, rgba(229,93,42,.14), transparent 60%),
-        radial-gradient(900px 420px at 55% 45%, rgba(107,45,23,.10), transparent 62%);
-      filter:saturate(1.1);
-      transform: rotate(-2deg);
-    }
-    .grain{
-      position:fixed; inset:0;
-      pointer-events:none;
-      z-index:-1;
-      opacity:.16;
-      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)' opacity='.35'/%3E%3C/svg%3E");
-      mix-blend-mode: overlay;
-    }
+header h1{
+    font-size:70px;
+    letter-spacing:3px;
+}
 
-    /* Highway line */
-    .highway{
-      position:fixed;
-      left:50%; top:-10vh;
-      width:min(920px, 140vw);
-      height:140vh;
-      transform:translateX(-50%) perspective(900px) rotateX(45deg);
-      border-radius:40px;
-      background: linear-gradient(90deg,
-        transparent 0%,
-        rgba(255,255,255,.06) 8%,
-        rgba(255,255,255,.03) 20%,
-        rgba(255,255,255,.02) 50%,
-        rgba(255,255,255,.03) 80%,
-        rgba(255,255,255,.06) 92%,
-        transparent 100%
-      );
-      box-shadow: 0 0 0 1px rgba(255,255,255,.03);
-      z-index:-1;
-      opacity:.55;
-      pointer-events:none;
-    }
-    .highway::after{
-      content:"";
-      position:absolute; inset:0;
-      background:
-        repeating-linear-gradient(to bottom,
-          rgba(255,184,107,.0) 0px,
-          rgba(255,184,107,.0) 22px,
-          rgba(255,184,107,.24) 22px,
-          rgba(255,184,107,.24) 38px,
-          rgba(255,184,107,.0) 38px,
-          rgba(255,184,107,.0) 90px
-        );
-      filter: blur(.2px);
-      opacity:.35;
-      mask-image: linear-gradient(to bottom, transparent 0%, black 14%, black 80%, transparent 100%);
-    }
+header h2{
+    color:#8b5cf6;
+    font-weight:300;
+    margin-top:10px;
+}
 
-    /* ===== Layout ===== */
-    .wrap{max-width:var(--max); margin:0 auto; padding:18px}
-    .topbar{
-      position:sticky; top:0; z-index:50;
-      padding:14px 18px;
-      backdrop-filter: blur(14px);
-      background: linear-gradient(to bottom, rgba(0,0,0,.55), rgba(0,0,0,.15));
-      border-bottom:1px solid rgba(255,255,255,.06);
-    }
-    .topbarInner{
-      max-width:var(--max);
-      margin:0 auto;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:14px;
-    }
+header p{
+    max-width:600px;
+    margin-top:25px;
+    color:#bdbdbd;
+}
 
-    .brand{
-      display:flex; align-items:center; gap:12px;
-      min-width: 220px;
-    }
-    .mark{
-      width:44px; height:44px; border-radius:16px;
-      display:grid; place-items:center;
-      font-weight:900; letter-spacing:1px;
-      color:var(--text);
-      background:
-        radial-gradient(30px 30px at 30% 30%, rgba(124,92,255,.40), transparent 60%),
-        radial-gradient(30px 30px at 70% 70%, rgba(21,227,255,.28), transparent 60%),
-        rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.12);
-      box-shadow: var(--shadow);
-    }
-    .brandText .name{
-      font-weight:900;
-      letter-spacing:2px;
-      text-transform:uppercase;
-      font-size:14px;
-      line-height:1.1;
-    }
-    .brandText .tag{
-      color:var(--muted);
-      font-size:12px;
-      margin-top:2px;
-      letter-spacing:.4px;
-      white-space:nowrap;
-    }
+.btn{
+    display:inline-block;
+    margin-top:35px;
+    padding:12px 30px;
+    border:1px solid #8b5cf6;
+    color:#8b5cf6;
+    text-decoration:none;
+    transition:.3s;
+}
 
-    .nav{
-      display:flex; align-items:center; gap:10px;
-      flex-wrap:wrap;
-      justify-content:flex-end;
-    }
-    .pill{
-      border:1px solid rgba(255,255,255,.12);
-      background: rgba(0,0,0,.18);
-      color:var(--text);
-      padding:10px 12px;
-      border-radius:999px;
-      text-decoration:none;
-      cursor:pointer;
-      font-weight:700;
-      letter-spacing:.3px;
-      font-size:13px;
-      transition: transform .15s ease, box-shadow .15s ease;
-    }
-    .pill:hover{
-      transform: translateY(-1px);
-      box-shadow: 0 0 0 4px rgba(124,92,255,.10);
-    }
-    .pill.neon{
-      background:
-        radial-gradient(120px 60px at 20% 10%, rgba(124,92,255,.22), transparent 60%),
-        radial-gradient(120px 60px at 85% 80%, rgba(21,227,255,.18), transparent 60%),
-        rgba(255,255,255,.06);
-    }
+.btn:hover{
+    background:#8b5cf6;
+    color:white;
+}
 
-    .hero{
-      margin-top:16px;
-      border-radius: calc(var(--radius) + 6px);
-      border:1px solid rgba(255,255,255,.10);
-      background:
-        radial-gradient(700px 320px at 8% 18%, rgba(255,184,107,.18), transparent 60%),
-        radial-gradient(700px 320px at 92% 22%, rgba(124,92,255,.18), transparent 60%),
-        radial-gradient(700px 320px at 55% 95%, rgba(21,227,255,.12), transparent 60%),
-        rgba(255,255,255,.04);
-      box-shadow: var(--shadow);
-      overflow:hidden;
-    }
-    .heroInner{
-      display:grid;
-      grid-template-columns: 1.35fr .65fr;
-      gap:16px;
-      padding:22px;
-    }
+section{
+    padding:90px 10%;
+}
 
-    .headline{
-      margin:0;
-      font-size: clamp(28px, 4vw, 44px);
-      letter-spacing: .5px;
-      line-height: 1.05;
-      text-transform: uppercase;
-    }
-    .subhead{
-      margin:10px 0 0;
-      color:var(--muted);
-      line-height:1.6;
-      max-width: 58ch;
-      font-size: 15px;
-    }
-    .heroActions{
-      display:flex; gap:10px; flex-wrap:wrap;
-      margin-top:16px;
-    }
-    .btn{
-      display:inline-flex; align-items:center; justify-content:center;
-      padding:11px 14px;
-      border-radius:16px;
-      border:1px solid rgba(255,255,255,.12);
-      background:
-        linear-gradient(135deg, rgba(124,92,255,.22), rgba(21,227,255,.16));
-      color:var(--text);
-      text-decoration:none;
-      font-weight:900;
-      letter-spacing:.5px;
-      transition: transform .15s ease, box-shadow .15s ease;
-    }
-    .btn:hover{
-      transform: translateY(-1px);
-      box-shadow: 0 0 0 4px rgba(21,227,255,.10);
-    }
-    .btn.ghost{
-      background: rgba(0,0,0,.12);
-      color:var(--text);
-    }
+.dark{
+    background:#111827;
+}
 
-    .heroCard{
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(0,0,0,.14);
-      border-radius: 22px;
-      padding:16px;
-      display:flex;
-      flex-direction:column;
-      justify-content:space-between;
-      gap:12px;
-    }
-    .kpi{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap:10px;
-    }
-    .kpiBox{
-      border-radius:18px;
-      padding:12px;
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.05);
-    }
-    .kpiNum{
-      font-size:22px;
-      font-weight:1000;
-      letter-spacing:.6px;
-    }
-    .kpiLab{
-      font-size:12px;
-      color:var(--muted);
-      margin-top:2px;
-    }
-    .chiprow{
-      display:flex; flex-wrap:wrap; gap:8px;
-      margin-top:8px;
-    }
-    .chip{
-      border-radius:999px;
-      padding:8px 10px;
-      border:1px solid rgba(255,255,255,.12);
-      background: rgba(0,0,0,.12);
-      font-weight:800;
-      font-size:12px;
-      color:var(--muted);
-    }
+.section-title{
+    font-size:35px;
+    margin-bottom:40px;
+    border-left:5px solid #8b5cf6;
+    padding-left:15px;
+}
 
-    .grid{
-      display:grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap:14px;
-      margin-top:14px;
-    }
-    .card{
-      border-radius: var(--radius);
-      border:1px solid rgba(255,255,255,.10);
-      background: var(--card);
-      box-shadow: var(--shadow);
-      padding:18px;
-      overflow:hidden;
-    }
-    .card h3{margin:0 0 8px; letter-spacing:.5px}
-    .muted{color:var(--muted); line-height:1.65}
-    .tiny{font-size:12px}
-    .line{
-      height:1px;
-      background: rgba(255,255,255,.10);
-      margin:14px 0;
-    }
-    .list{
-      display:flex; flex-direction:column; gap:10px;
-      margin-top:10px;
-    }
-    .item{
-      padding:12px;
-      border-radius:18px;
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(0,0,0,.10);
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:12px;
-      transition: transform .15s ease, box-shadow .15s ease;
-    }
-    .item:hover{
-      transform: translateY(-1px);
-      box-shadow: 0 0 0 4px rgba(124,92,255,.10);
-    }
-    .badge{
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
-      border-radius:999px;
-      padding:6px 9px;
-      border:1px solid rgba(255,255,255,.12);
-      color:var(--muted);
-      font-size:12px;
-      font-weight:800;
-      margin-right:6px;
-      background: rgba(255,255,255,.04);
-    }
-    .badge i{
-      width:8px; height:8px;
-      border-radius:99px;
-      background: linear-gradient(135deg, rgba(255,184,107,.9), rgba(21,227,255,.8));
-      display:inline-block;
-      box-shadow:0 0 0 3px rgba(255,184,107,.08);
-    }
+.card{
+    background:#1f2937;
+    padding:30px;
+    margin-bottom:30px;
+    border-radius:8px;
+    transition:.3s;
+}
 
-    .sectionTitle{
-      margin:0 0 10px;
-      font-size: 18px;
-      letter-spacing: .6px;
-      text-transform: uppercase;
-    }
+.card:hover{
+    transform:translateY(-5px);
+    background:#252f3f;
+}
 
-    .footer{
-      padding:18px 0 28px;
-      text-align:center;
-      color:var(--muted);
-      font-size:12px;
-      letter-spacing:.4px;
-    }
+.card h3{
+    color:#8b5cf6;
+    margin-bottom:15px;
+}
 
-    /* Responsive */
-    @media (max-width: 980px){
-      .heroInner{grid-template-columns:1fr}
-      .grid{grid-template-columns:1fr}
-      .brandText .tag{display:none}
-    }
+.quote{
+    font-size:28px;
+    text-align:center;
+    max-width:800px;
+    margin:0 auto;
+    color:#d4d4d4;
+}
 
-    /* Accent underline */
-    .glow{
-      display:inline-block;
-      background: linear-gradient(90deg, rgba(255,184,107,.25), rgba(124,92,255,.18), rgba(21,227,255,.16));
-      padding: 2px 10px 3px;
-      border-radius: 999px;
-      border:1px solid rgba(255,255,255,.08);
-      box-shadow: 0 0 0 4px rgba(255,184,107,.06);
-      margin-left:6px;
-      transform: translateY(-1px);
-    }
-  </style>
+footer{
+    text-align:center;
+    padding:40px;
+    background:#0b0d12;
+    color:#888;
+}
+</style>
 </head>
 
 <body>
-  <div class="bg"></div>
-  <div class="grain"></div>
-  <div class="highway"></div>
 
-  <header class="topbar">
-    <div class="topbarInner">
-      <div class="brand">
-        <div class="mark">EV</div>
-        <div class="brandText">
-          <div class="name">EVAN VALE</div>
-          <div class="tag">American Bike Culture • Desert Runs • Neon Garage</div>
-        </div>
-      </div>
+<header>
+    <h1>RYU</h1>
+    <h2>American Garage Apprentice</h2>
+    <p>
+        I’m not a master mechanic. Not even close.  
+        I’m an apprentice — learning the craft the real way.  
+        Grease on my hands. Mistakes in the process. Discipline in the mindset.  
+        Every day is about getting better than yesterday.
+    </p>
+    <a href="#about" class="btn">Explore</a>
+</header>
 
-      <nav class="nav">
-        <a class="pill" href="#builds">Build Log</a>
-        <a class="pill" href="#rides">Rides</a>
-        <a class="pill" href="#gear">Gear</a>
-        <a class="pill neon" href="#vision">Garage Vision</a>
-      </nav>
+<section id="about">
+    <h2 class="section-title">About Me</h2>
+
+    <div class="card">
+        <h3>Still Learning</h3>
+        <p>
+            I’m in training. I don’t pretend to know everything.
+            I study engines, tools, systems, and the mindset behind real craftsmanship.
+            Growth matters more than ego.
+        </p>
     </div>
-  </header>
 
-  <main class="wrap">
-    <section class="hero" id="top">
-      <div class="heroInner">
-        <div>
-          <h1 class="headline">American Bike Culture <span class="glow">EVAN VALE</span></h1>
-          <p class="subhead">
-            Desert highway attitude + neon garage grit.
-            This is a personal brand page built for the future — builds, rides, and the vision of a modern American-style garage in Thailand.
-          </p>
-
-          <div class="heroActions">
-            <a class="btn" href="#builds">Explore Builds</a>
-            <a class="btn ghost" href="#vision">See the Vision</a>
-          </div>
-
-          <div class="chiprow">
-            <span class="chip">DARK • NEON</span>
-            <span class="chip">DESERT RUNS</span>
-            <span class="chip">BUILD LOG</span>
-            <span class="chip">CONTENT READY</span>
-          </div>
-        </div>
-
-        <aside class="heroCard">
-          <div>
-            <div class="sectionTitle">Brand Snapshot</div>
-            <div class="kpi">
-              <div class="kpiBox">
-                <div class="kpiNum" id="kpiBuilds">03</div>
-                <div class="kpiLab">Build Notes</div>
-              </div>
-              <div class="kpiBox">
-                <div class="kpiNum" id="kpiRides">02</div>
-                <div class="kpiLab">Ride Logs</div>
-              </div>
-              <div class="kpiBox">
-                <div class="kpiNum">USA</div>
-                <div class="kpiLab">Aesthetic</div>
-              </div>
-              <div class="kpiBox">
-                <div class="kpiNum">Rayong</div>
-                <div class="kpiLab">Home Base</div>
-              </div>
-            </div>
-          </div>
-
-          <div>
-            <div class="line"></div>
-            <div class="muted tiny">
-              “Build it like a garage. Ride it like a highway.”
-            </div>
-          </div>
-        </aside>
-      </div>
-    </section>
-
-    <section class="grid">
-      <div class="card">
-        <h3>Who This Is</h3>
-        <p class="muted">
-          A future-facing bike brand page — made for content, projects, and the garage dream.
-          Keep it simple now, scale it later.
+    <div class="card">
+        <h3>American Garage Mindset</h3>
+        <p>
+            Respect the grind. Respect the noise of machines.
+            Show up early. Leave late. Stay sharp.
+            That’s the culture I follow.
         </p>
-        <div class="line"></div>
-        <div class="muted tiny">
-          Replace this text with your real intro when ready.
-        </div>
-      </div>
-
-      <div class="card">
-        <h3>Brand Voice</h3>
-        <p class="muted">
-          Quiet confidence. Heavy grit. No cringe.
-          English-first headings, Thai-friendly details, like a real American garage page.
-        </p>
-        <div class="line"></div>
-        <span class="badge"><i></i>DESERT</span>
-        <span class="badge"><i></i>NEON</span>
-        <span class="badge"><i></i>GARAGE</span>
-      </div>
-
-      <div class="card">
-        <h3>CTA Targets</h3>
-        <p class="muted">
-          Hook people fast: builds, rides, gear. Then convert to follows, DMs, or future garage bookings.
-        </p>
-        <div class="line"></div>
-        <div class="muted tiny">Buttons are placeholders—swap to your TikTok/IG/YouTube links.</div>
-      </div>
-    </section>
-
-    <section class="card" id="builds" style="margin-top:14px;">
-      <h2 class="sectionTitle">Build Log</h2>
-      <p class="muted">Short, clean entries that look like a real brand. Add photos later.</p>
-
-      <div class="list">
-        <div class="item">
-          <div>
-            <div><strong>Build #01 — Street Setup</strong></div>
-            <div class="muted tiny">Suspension check • brake feel • daily ride comfort</div>
-            <div style="margin-top:8px">
-              <span class="badge"><i></i>notes</span>
-              <span class="badge"><i></i>street</span>
-            </div>
-          </div>
-          <div class="muted tiny">Draft →</div>
-        </div>
-
-        <div class="item">
-          <div>
-            <div><strong>Build #02 — Night Neon Aesthetic</strong></div>
-            <div class="muted tiny">Lighting mood • decals • dark theme photography</div>
-            <div style="margin-top:8px">
-              <span class="badge"><i></i>visual</span>
-              <span class="badge"><i></i>night</span>
-            </div>
-          </div>
-          <div class="muted tiny">Draft →</div>
-        </div>
-
-        <div class="item">
-          <div>
-            <div><strong>Build #03 — Long Ride Prep</strong></div>
-            <div class="muted tiny">Chain • tire pressure • tool roll • hydration kit</div>
-            <div style="margin-top:8px">
-              <span class="badge"><i></i>prep</span>
-              <span class="badge"><i></i>highway</span>
-            </div>
-          </div>
-          <div class="muted tiny">Draft →</div>
-        </div>
-      </div>
-    </section>
-
-    <section class="grid" style="margin-top:14px;">
-      <div class="card" id="rides">
-        <h2 class="sectionTitle">Rides</h2>
-        <p class="muted">Desert mindset—even if it’s Thailand roads. Log the vibe.</p>
-        <div class="line"></div>
-        <div class="list">
-          <div class="item">
-            <div>
-              <div><strong>Ride #01 — Midnight Run</strong></div>
-              <div class="muted tiny">quiet roads • neon reflections • calm speed</div>
-            </div>
-            <div class="muted tiny">Log →</div>
-          </div>
-          <div class="item">
-            <div>
-              <div><strong>Ride #02 — Sunrise Highway</strong></div>
-              <div class="muted tiny">warm light • sand-tone edits • smooth throttle</div>
-            </div>
-            <div class="muted tiny">Log →</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="card" id="gear">
-        <h2 class="sectionTitle">Gear</h2>
-        <p class="muted">Keep it tight: only what you actually use.</p>
-        <div class="line"></div>
-        <div class="list">
-          <div class="item">
-            <div>
-              <div><strong>Helmet Setup</strong></div>
-              <div class="muted tiny">visor care • pinlock • comms (optional)</div>
-            </div>
-            <div class="muted tiny">Spec →</div>
-          </div>
-          <div class="item">
-            <div>
-              <div><strong>Tool Roll</strong></div>
-              <div class="muted tiny">basic sockets • zip ties • chain lube</div>
-            </div>
-            <div class="muted tiny">Spec →</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="card" id="vision">
-        <h2 class="sectionTitle">Garage Vision</h2>
-        <p class="muted">
-          EVAN VALE GARAGE — modern American-style shop: dark tone, neon typography, clean service.
-          This page becomes the front door later.
-        </p>
-        <div class="line"></div>
-        <div class="muted tiny">
-          Next step: add 1 hero photo, 6 build photos, and a single “About Ryu” paragraph.
-        </div>
-        <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
-          <a class="btn" href="#top">Back to Top</a>
-          <a class="btn ghost" href="javascript:void(0)" id="fakeSocial">Connect Socials</a>
-        </div>
-      </div>
-    </section>
-
-    <div class="footer">
-      © EVAN VALE — built for the future • desert energy, neon garage
     </div>
-  </main>
 
-  <script>
-    // tiny interaction (placeholder)
-    document.getElementById("fakeSocial").addEventListener("click", () => {
-      alert("Swap this button to your TikTok / IG / YouTube links. Brand-ready.");
-    });
-  </script>
+    <div class="card">
+        <h3>Built Over Time</h3>
+        <p>
+            Skill isn’t magic. It’s repetition.
+            It’s learning from the older guys.
+            It’s breaking something and fixing it better the second time.
+        </p>
+    </div>
+</section>
+
+<section class="dark">
+    <h2 class="section-title">Philosophy</h2>
+
+    <div class="quote">
+        “You don’t start great.  
+        You start consistent — and greatness shows up later.”
+    </div>
+</section>
+
+<section>
+    <h2 class="section-title">Current Focus</h2>
+
+    <div class="card">
+        <h3>Mechanical Fundamentals</h3>
+        <p>
+            Understanding the basics before chasing speed.
+            Tight foundations build strong machines.
+        </p>
+    </div>
+
+    <div class="card">
+        <h3>Discipline</h3>
+        <p>
+            Skill grows when discipline stays.
+            No shortcuts. No fake image.
+        </p>
+    </div>
+
+    <div class="card">
+        <h3>Identity</h3>
+        <p>
+            I don’t need to be the best yet.
+            I just need to become better — daily.
+        </p>
+    </div>
+</section>
+
+<footer>
+    © 2026 Ryu — Built with Thai roots. Driven by American attitude.
+</footer>
+
 </body>
 </html>
