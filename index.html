@@ -1,200 +1,745 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="th">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ryu | American Garage Apprentice</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Ryu — Intro (US x TH)</title>
+  <meta name="description" content="Personal intro website — American vibe x Thai roots." />
+  <style>
+    :root{
+      --bg:#07080b;
+      --panel:#0c0f16;
+      --text:#e9eefc;
+      --muted:#9aa6c6;
+      --line:rgba(255,255,255,.08);
+      --glow:rgba(99,102,241,.25);
+      --accent:#8b5cf6;
+      --accent2:#22c55e;
+      --warn:#f59e0b;
+      --danger:#ef4444;
 
-<style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family: 'Segoe UI', sans-serif;
-}
+      --radius:18px;
+      --shadow: 0 20px 60px rgba(0,0,0,.55);
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Noto Sans Thai", "Noto Sans", Arial, sans-serif;
+    }
 
-body{
-    background:#0c0f16;
-    color:white;
-    line-height:1.6;
-}
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:var(--sans);
+      color:var(--text);
+      background:
+        radial-gradient(1200px 800px at 10% 10%, rgba(139,92,246,.18), transparent 55%),
+        radial-gradient(900px 700px at 90% 30%, rgba(34,197,94,.14), transparent 55%),
+        radial-gradient(900px 700px at 40% 100%, rgba(245,158,11,.10), transparent 60%),
+        var(--bg);
+      overflow-x:hidden;
+    }
 
-header{
-    height:100vh;
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    padding:0 10%;
-    background:linear-gradient(to right,#000 40%,#111827);
-}
+    a{color:inherit; text-decoration:none}
+    .wrap{max-width:1100px; margin:0 auto; padding:26px 18px 60px}
+    .topbar{
+      position:sticky; top:0; z-index:50;
+      backdrop-filter: blur(10px);
+      background: linear-gradient(to bottom, rgba(7,8,11,.85), rgba(7,8,11,.35));
+      border-bottom:1px solid var(--line);
+    }
+    .topbar .inner{
+      max-width:1100px; margin:0 auto; padding:14px 18px;
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+    }
+    .brand{
+      display:flex; align-items:center; gap:10px;
+      letter-spacing:.5px;
+    }
+    .badge{
+      width:36px; height:36px; border-radius:12px;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.12), rgba(255,255,255,.02));
+      border:1px solid var(--line);
+      display:grid; place-items:center;
+      box-shadow: 0 0 0 6px rgba(139,92,246,.06);
+      position:relative;
+    }
+    .badge:after{
+      content:"";
+      position:absolute; inset:-10px;
+      background: radial-gradient(circle, rgba(139,92,246,.20), transparent 60%);
+      filter: blur(10px);
+      z-index:-1;
+    }
+    .brand strong{font-weight:800}
+    .brand span{color:var(--muted); font-family:var(--mono); font-size:12px}
 
-header h1{
-    font-size:70px;
-    letter-spacing:3px;
-}
+    .nav{
+      display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+    .pill{
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.03);
+      padding:9px 12px;
+      border-radius:999px;
+      font-size:13px;
+      color:var(--muted);
+      transition:.15s ease;
+    }
+    .pill:hover{transform: translateY(-1px); color:var(--text); border-color:rgba(255,255,255,.16)}
+    .btn{
+      cursor:pointer;
+      border:1px solid rgba(139,92,246,.35);
+      background: linear-gradient(180deg, rgba(139,92,246,.22), rgba(139,92,246,.08));
+      color:var(--text);
+      padding:10px 12px;
+      border-radius:999px;
+      font-size:13px;
+      display:flex; align-items:center; gap:8px;
+      transition:.15s ease;
+      box-shadow: 0 10px 30px rgba(139,92,246,.12);
+    }
+    .btn:hover{transform: translateY(-1px); border-color:rgba(139,92,246,.6)}
+    .btn:active{transform: translateY(0px) scale(.99)}
+    .btn small{opacity:.8; font-family:var(--mono)}
 
-header h2{
-    color:#8b5cf6;
-    font-weight:300;
-    margin-top:10px;
-}
+    header.hero{
+      padding:34px 0 18px;
+      display:grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap:18px;
+      align-items:stretch;
+    }
+    @media (max-width: 920px){
+      header.hero{grid-template-columns:1fr}
+    }
 
-header p{
-    max-width:600px;
-    margin-top:25px;
-    color:#bdbdbd;
-}
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      position:relative;
+      overflow:hidden;
+    }
+    .card:before{
+      content:"";
+      position:absolute; inset:0;
+      background: radial-gradient(600px 220px at 20% 0%, rgba(139,92,246,.18), transparent 60%),
+                  radial-gradient(500px 220px at 80% 20%, rgba(34,197,94,.14), transparent 60%);
+      pointer-events:none;
+    }
+    .card > .content{position:relative; padding:22px}
+    .hero h1{
+      margin:0 0 8px;
+      font-size:42px; line-height:1.05;
+      letter-spacing:-.5px;
+    }
+    .sub{
+      color:var(--muted);
+      font-size:15px;
+      line-height:1.6;
+      margin:0 0 16px;
+    }
+    .chips{display:flex; gap:8px; flex-wrap:wrap; margin-top:14px}
+    .chip{
+      font-family:var(--mono);
+      font-size:12px;
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.18);
+      color:rgba(233,238,252,.92);
+    }
+    .chip.accent{border-color:rgba(139,92,246,.35); box-shadow:0 0 0 5px rgba(139,92,246,.06)}
+    .chip.green{border-color:rgba(34,197,94,.35); box-shadow:0 0 0 5px rgba(34,197,94,.05)}
+    .chip.warn{border-color:rgba(245,158,11,.35); box-shadow:0 0 0 5px rgba(245,158,11,.05)}
 
-.btn{
-    display:inline-block;
-    margin-top:35px;
-    padding:12px 30px;
-    border:1px solid #8b5cf6;
-    color:#8b5cf6;
-    text-decoration:none;
-    transition:.3s;
-}
+    .rightgrid{
+      display:grid;
+      grid-template-rows: 1fr 1fr;
+      gap:18px;
+    }
+    .statRow{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:12px;
+      margin-top:12px;
+    }
+    .stat{
+      padding:12px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.16);
+    }
+    .stat b{display:block; font-size:18px}
+    .stat span{color:var(--muted); font-size:12px}
 
-.btn:hover{
-    background:#8b5cf6;
-    color:white;
-}
+    main{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:18px;
+      margin-top:18px;
+    }
+    @media (max-width: 920px){
+      main{grid-template-columns:1fr}
+    }
 
-section{
-    padding:90px 10%;
-}
+    .sectionTitle{
+      display:flex; align-items:center; justify-content:space-between;
+      gap:10px;
+      margin-bottom:10px;
+    }
+    .sectionTitle h2{
+      margin:0;
+      font-size:16px;
+      letter-spacing:.2px;
+    }
+    .hint{color:var(--muted); font-size:12px; font-family:var(--mono)}
+    .list{display:grid; gap:10px}
+    .item{
+      padding:14px 14px;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.16);
+      transition:.15s ease;
+    }
+    .item:hover{border-color:rgba(255,255,255,.18); transform: translateY(-1px)}
+    .item b{display:flex; align-items:center; gap:8px}
+    .dot{
+      width:10px; height:10px; border-radius:50%;
+      background: var(--accent);
+      box-shadow:0 0 0 6px rgba(139,92,246,.10);
+    }
+    .dot.green{background:var(--accent2); box-shadow:0 0 0 6px rgba(34,197,94,.10)}
+    .dot.warn{background:var(--warn); box-shadow:0 0 0 6px rgba(245,158,11,.10)}
+    .item p{margin:8px 0 0; color:var(--muted); font-size:13px; line-height:1.55}
 
-.dark{
-    background:#111827;
-}
+    .contactGrid{
+      display:grid; gap:10px;
+      grid-template-columns: 1fr 1fr;
+    }
+    @media (max-width: 520px){
+      .contactGrid{grid-template-columns:1fr}
+    }
+    .contactBtn{
+      display:flex; align-items:center; justify-content:space-between;
+      gap:10px;
+      padding:14px;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.16);
+      transition:.15s ease;
+      cursor:pointer;
+    }
+    .contactBtn:hover{transform: translateY(-1px); border-color:rgba(255,255,255,.22)}
+    .contactBtn span{color:var(--muted); font-size:12px; font-family:var(--mono)}
+    .footer{
+      margin-top:18px;
+      color:var(--muted);
+      font-size:12px;
+      text-align:center;
+      font-family:var(--mono);
+      opacity:.9;
+    }
+    .toast{
+      position:fixed; left:50%; bottom:18px; transform:translateX(-50%);
+      background: rgba(10,14,24,.85);
+      border:1px solid rgba(255,255,255,.12);
+      padding:12px 14px;
+      border-radius:14px;
+      box-shadow: 0 18px 60px rgba(0,0,0,.55);
+      color:var(--text);
+      font-size:13px;
+      display:none;
+      max-width:min(560px, calc(100% - 22px));
+    }
+    .toast.show{display:block; animation:pop .18s ease}
+    @keyframes pop{
+      from{opacity:0; transform:translateX(-50%) translateY(6px) scale(.98)}
+      to{opacity:1; transform:translateX(-50%) translateY(0) scale(1)}
+    }
 
-.section-title{
-    font-size:35px;
-    margin-bottom:40px;
-    border-left:5px solid #8b5cf6;
-    padding-left:15px;
-}
-
-.card{
-    background:#1f2937;
-    padding:30px;
-    margin-bottom:30px;
-    border-radius:8px;
-    transition:.3s;
-}
-
-.card:hover{
-    transform:translateY(-5px);
-    background:#252f3f;
-}
-
-.card h3{
-    color:#8b5cf6;
-    margin-bottom:15px;
-}
-
-.quote{
-    font-size:28px;
-    text-align:center;
-    max-width:800px;
-    margin:0 auto;
-    color:#d4d4d4;
-}
-
-footer{
-    text-align:center;
-    padding:40px;
-    background:#0b0d12;
-    color:#888;
-}
-</style>
+    .split{
+      display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+      margin-top:14px;
+    }
+    .ghost{
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.03);
+      color:var(--text);
+      padding:10px 12px;
+      border-radius:999px;
+      font-size:13px;
+      cursor:pointer;
+      transition:.15s ease;
+    }
+    .ghost:hover{transform: translateY(-1px); border-color:rgba(255,255,255,.24)}
+    .muteline{height:1px; background:var(--line); margin:14px 0}
+  </style>
 </head>
 
 <body>
+  <div class="topbar">
+    <div class="inner">
+      <div class="brand" aria-label="brand">
+        <div class="badge" title="R">
+          <span style="font-family:var(--mono); font-weight:800;">R</span>
+        </div>
+        <div>
+          <strong id="brandName">Ryu</strong>
+          <div><span id="brandTag">US vibe • Thai roots</span></div>
+        </div>
+      </div>
 
-<header>
-    <h1>RYU</h1>
-    <h2>American Garage Apprentice</h2>
-    <p>
-        I’m not a master mechanic. Not even close.  
-        I’m an apprentice — learning the craft the real way.  
-        Grease on my hands. Mistakes in the process. Discipline in the mindset.  
-        Every day is about getting better than yesterday.
-    </p>
-    <a href="#about" class="btn">Explore</a>
-</header>
-
-<section id="about">
-    <h2 class="section-title">About Me</h2>
-
-    <div class="card">
-        <h3>Still Learning</h3>
-        <p>
-            I’m in training. I don’t pretend to know everything.
-            I study engines, tools, systems, and the mindset behind real craftsmanship.
-            Growth matters more than ego.
-        </p>
+      <div class="nav">
+        <a class="pill" href="#about" data-i18n="nav_about">เกี่ยวกับ</a>
+        <a class="pill" href="#skills" data-i18n="nav_skills">สกิล</a>
+        <a class="pill" href="#projects" data-i18n="nav_projects">ผลงาน</a>
+        <a class="pill" href="#contact" data-i18n="nav_contact">ติดต่อ</a>
+        <button class="btn" id="langBtn" type="button" aria-label="toggle language">
+          🌐 <span id="langLabel">TH</span> <small id="langHint">click</small>
+        </button>
+      </div>
     </div>
+  </div>
 
-    <div class="card">
-        <h3>American Garage Mindset</h3>
-        <p>
-            Respect the grind. Respect the noise of machines.
-            Show up early. Leave late. Stay sharp.
-            That’s the culture I follow.
-        </p>
-    </div>
+  <div class="wrap">
+    <header class="hero">
+      <section class="card" id="about">
+        <div class="content hero">
+          <h1 data-i18n="hero_title">สวัสดี กูชื่อ <span style="color:var(--accent)">Ryu</span> 👋</h1>
+          <p class="sub" data-i18n="hero_sub">
+            เด็กช่างสายรถ/บิ๊กไบค์ โทนดิบๆแบบอเมริกัน แต่รากไทยแน่นๆ — ชอบงานจริง สายลงมือ ทำให้มันจบ.
+          </p>
 
-    <div class="card">
-        <h3>Built Over Time</h3>
-        <p>
-            Skill isn’t magic. It’s repetition.
-            It’s learning from the older guys.
-            It’s breaking something and fixing it better the second time.
-        </p>
-    </div>
-</section>
+          <div class="split">
+            <button class="ghost" type="button" id="copyBioBtn" data-i18n="btn_copybio">คัดลอก Bio</button>
+            <button class="ghost" type="button" id="downloadBtn" data-i18n="btn_download">ดาวน์โหลดเรซูเม่ (ตัวอย่าง)</button>
+          </div>
 
-<section class="dark">
-    <h2 class="section-title">Philosophy</h2>
+          <div class="muteline"></div>
 
-    <div class="quote">
-        “You don’t start great.  
-        You start consistent — and greatness shows up later.”
-    </div>
-</section>
+          <div class="chips" aria-label="chips">
+            <span class="chip accent" data-i18n="chip_1">⚙️ Automotive / Garage</span>
+            <span class="chip green" data-i18n="chip_2">🏍️ Big Bike</span>
+            <span class="chip warn" data-i18n="chip_3">💻 Web / Branding</span>
+            <span class="chip" data-i18n="chip_4">✍️ Storytelling</span>
+          </div>
 
-<section>
-    <h2 class="section-title">Current Focus</h2>
+          <div class="statRow">
+            <div class="stat">
+              <b data-i18n="stat_1">ทำงานดิบ แต่เนี๊ยบ</b>
+              <span data-i18n="stat_1s">ลงมือจริงก่อนพูด</span>
+            </div>
+            <div class="stat">
+              <b data-i18n="stat_2">US x TH Style</b>
+              <span data-i18n="stat_2s">เท่แบบฝรั่ง แต่ใจไทย</span>
+            </div>
+          </div>
+        </div>
+      </section>
 
-    <div class="card">
-        <h3>Mechanical Fundamentals</h3>
-        <p>
-            Understanding the basics before chasing speed.
-            Tight foundations build strong machines.
-        </p>
-    </div>
+      <section class="rightgrid">
+        <section class="card">
+          <div class="content">
+            <div class="sectionTitle">
+              <h2 data-i18n="panel_title_1">Quick Intro</h2>
+              <span class="hint" id="nowHint">—</span>
+            </div>
+            <div class="list">
+              <div class="item">
+                <b><span class="dot"></span> <span data-i18n="q_1">โฟกัส: งานช่าง + สายแบรนด์</span></b>
+                <p data-i18n="q_1p">ชอบทำของให้ “ดูมีตัวตน” ตั้งแต่เครื่องยนต์ยันหน้าเว็บ</p>
+              </div>
+              <div class="item">
+                <b><span class="dot green"></span> <span data-i18n="q_2">สไตล์: American Garage</span></b>
+                <p data-i18n="q_2p">ดำ-ม่วง-นีออน ดิบ เท่ ทน ใช้งานจริง</p>
+              </div>
+              <div class="item">
+                <b><span class="dot warn"></span> <span data-i18n="q_3">โหมด: ทำให้จบ</span></b>
+                <p data-i18n="q_3p">ไม่ชอบยืดเยื้อ ชอบงานชัดๆ มีขั้นตอน</p>
+              </div>
+            </div>
+          </div>
+        </section>
 
-    <div class="card">
-        <h3>Discipline</h3>
-        <p>
-            Skill grows when discipline stays.
-            No shortcuts. No fake image.
-        </p>
-    </div>
+        <section class="card">
+          <div class="content">
+            <div class="sectionTitle">
+              <h2 data-i18n="panel_title_2">Signature</h2>
+              <span class="hint" data-i18n="panel_hint_2">copy-ready</span>
+            </div>
+            <div class="item">
+              <b><span class="dot green"></span> <span data-i18n="sig_title">One-liner</span></b>
+              <p id="oneLiner" data-i18n="sig_line">
+                “Built with Thai roots, tuned with American attitude.”
+              </p>
+            </div>
+            <div class="item">
+              <b><span class="dot"></span> <span data-i18n="sig_title2">Bio</span></b>
+              <p id="bioText" data-i18n="sig_bio">
+                เด็กช่างสายรถ/บิ๊กไบค์ + ทำเว็บ/แบรนด์ โทน American garage ดิบ เท่ และจริงจังกับงาน.
+              </p>
+            </div>
+          </div>
+        </section>
+      </section>
+    </header>
 
-    <div class="card">
-        <h3>Identity</h3>
-        <p>
-            I don’t need to be the best yet.
-            I just need to become better — daily.
-        </p>
-    </div>
-</section>
+    <main>
+      <section class="card" id="skills">
+        <div class="content">
+          <div class="sectionTitle">
+            <h2 data-i18n="skills_title">Skills / สิ่งที่กูทำได้</h2>
+            <span class="hint" data-i18n="skills_hint">edit these</span>
+          </div>
 
-<footer>
-    © 2026 Ryu — Built with Thai roots. Driven by American attitude.
-</footer>
+          <div class="list">
+            <div class="item">
+              <b><span class="dot"></span> <span data-i18n="sk1">งานช่างยนต์ / ซ่อมบำรุง</span></b>
+              <p data-i18n="sk1p">ระบบส่งกำลัง, งานแก้ปัญหา, งานอู่แบบลงมือจริง</p>
+            </div>
+            <div class="item">
+              <b><span class="dot green"></span> <span data-i18n="sk2">Big Bike / การดูแล-เซ็ตอัป</span></b>
+              <p data-i18n="sk2p">ดูแลพื้นฐาน, เช็กความปลอดภัย, อัปเกรดแบบมีเหตุผล</p>
+            </div>
+            <div class="item">
+              <b><span class="dot warn"></span> <span data-i18n="sk3">Web + Branding</span></b>
+              <p data-i18n="sk3p">Landing page, UI โทนนีออน, โครงสร้างเว็บที่ใช้งานได้จริง</p>
+            </div>
+            <div class="item">
+              <b><span class="dot"></span> <span data-i18n="sk4">Storytelling / คอนเทนต์</span></b>
+              <p data-i18n="sk4p">เล่าเรื่องให้ “คนรู้สึก” และทำให้แบรนด์มีคาแรกเตอร์</p>
+            </div>
+          </div>
+        </div>
+      </section>
 
+      <section class="card" id="projects">
+        <div class="content">
+          <div class="sectionTitle">
+            <h2 data-i18n="proj_title">Projects / ของที่ทำ</h2>
+            <span class="hint" data-i18n="proj_hint">put links</span>
+          </div>
+
+          <div class="list">
+            <a class="item" href="#" onclick="return false;">
+              <b><span class="dot green"></span> <span data-i18n="pj1">Evan Vale Garage (concept)</span></b>
+              <p data-i18n="pj1p">อู่สไตล์ American garage + แบรนด์ออนไลน์ โทนเข้ม/ไฟนีออน</p>
+            </a>
+            <a class="item" href="#" onclick="return false;">
+              <b><span class="dot"></span> <span data-i18n="pj2">Web Landing / Storefront</span></b>
+              <p data-i18n="pj2p">หน้าแนะนำตัว/หน้าร้านแบบเร็ว ลื่น มือถือก็หล่อ</p>
+            </a>
+            <a class="item" href="#" onclick="return false;">
+              <b><span class="dot warn"></span> <span data-i18n="pj3">Artwork / Characters</span></b>
+              <p data-i18n="pj3p">ภาพตัวละคร โทนเข้ม เท่ๆ เอาไปทำสติ๊กเกอร์/คอนเทนต์ได้</p>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section class="card" id="contact" style="grid-column: 1 / -1;">
+        <div class="content">
+          <div class="sectionTitle">
+            <h2 data-i18n="contact_title">Contact / ช่องทาง</h2>
+            <span class="hint" data-i18n="contact_hint">click to copy</span>
+          </div>
+
+          <div class="contactGrid">
+            <div class="contactBtn" data-copy="ryu@example.com">
+              <div>
+                <b>Email</b>
+                <div><span>ryu@example.com</span></div>
+              </div>
+              <span data-i18n="copy">COPY</span>
+            </div>
+
+            <div class="contactBtn" data-copy="@ryu_ig">
+              <div>
+                <b>Instagram</b>
+                <div><span>@ryu_ig</span></div>
+              </div>
+              <span data-i18n="copy">COPY</span>
+            </div>
+
+            <div class="contactBtn" data-copy="https://github.com/yourname">
+              <div>
+                <b>GitHub</b>
+                <div><span>github.com/yourname</span></div>
+              </div>
+              <span data-i18n="copy">COPY</span>
+            </div>
+
+            <div class="contactBtn" data-copy="Rayong, TH / (US-ready)">
+              <div>
+                <b data-i18n="loc">Location</b>
+                <div><span>Rayong, TH / (US-ready)</span></div>
+              </div>
+              <span data-i18n="copy">COPY</span>
+            </div>
+          </div>
+
+          <div class="footer">
+            <span id="footerText">© <span id="year"></span> Ryu • Built clean, tuned mean.</span>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite">Copied.</div>
+
+  <script>
+    // ====== Simple i18n (TH/EN) ======
+    const dict = {
+      th: {
+        nav_about: "เกี่ยวกับ",
+        nav_skills: "สกิล",
+        nav_projects: "ผลงาน",
+        nav_contact: "ติดต่อ",
+
+        hero_title: "สวัสดี กูชื่อ <span style='color:var(--accent)'>Ryu</span> 👋",
+        hero_sub: "เด็กช่างสายรถ/บิ๊กไบค์ โทนดิบๆแบบอเมริกัน แต่รากไทยแน่นๆ — ชอบงานจริง สายลงมือ ทำให้มันจบ.",
+        btn_copybio: "คัดลอก Bio",
+        btn_download: "ดาวน์โหลดเรซูเม่ (ตัวอย่าง)",
+
+        chip_1: "⚙️ Automotive / Garage",
+        chip_2: "🏍️ Big Bike",
+        chip_3: "💻 Web / Branding",
+        chip_4: "✍️ Storytelling",
+
+        stat_1: "ทำงานดิบ แต่เนี๊ยบ",
+        stat_1s: "ลงมือจริงก่อนพูด",
+        stat_2: "US x TH Style",
+        stat_2s: "เท่แบบฝรั่ง แต่ใจไทย",
+
+        panel_title_1: "แนะนำแบบเร็ว",
+        panel_title_2: "ลายเซ็น",
+        panel_hint_2: "ก็อปไปใช้ได้",
+
+        q_1: "โฟกัส: งานช่าง + สายแบรนด์",
+        q_1p: "ชอบทำของให้ “ดูมีตัวตน” ตั้งแต่เครื่องยนต์ยันหน้าเว็บ",
+        q_2: "สไตล์: American Garage",
+        q_2p: "ดำ-ม่วง-นีออน ดิบ เท่ ทน ใช้งานจริง",
+        q_3: "โหมด: ทำให้จบ",
+        q_3p: "ไม่ชอบยืดเยื้อ ชอบงานชัดๆ มีขั้นตอน",
+
+        sig_title: "ประโยคเดียว",
+        sig_line: "“Built with Thai roots, tuned with American attitude.”",
+        sig_title2: "Bio",
+        sig_bio: "เด็กช่างสายรถ/บิ๊กไบค์ + ทำเว็บ/แบรนด์ โทน American garage ดิบ เท่ และจริงจังกับงาน.",
+
+        skills_title: "Skills / สิ่งที่กูทำได้",
+        skills_hint: "แก้ข้อความได้เลย",
+
+        sk1: "งานช่างยนต์ / ซ่อมบำรุง",
+        sk1p: "ระบบส่งกำลัง, งานแก้ปัญหา, งานอู่แบบลงมือจริง",
+        sk2: "Big Bike / การดูแล-เซ็ตอัป",
+        sk2p: "ดูแลพื้นฐาน, เช็กความปลอดภัย, อัปเกรดแบบมีเหตุผล",
+        sk3: "Web + Branding",
+        sk3p: "Landing page, UI โทนนีออน, โครงสร้างเว็บที่ใช้งานได้จริง",
+        sk4: "Storytelling / คอนเทนต์",
+        sk4p: "เล่าเรื่องให้ “คนรู้สึก” และทำให้แบรนด์มีคาแรกเตอร์",
+
+        proj_title: "Projects / ของที่ทำ",
+        proj_hint: "ใส่ลิงก์ทีหลัง",
+
+        pj1: "Evan Vale Garage (concept)",
+        pj1p: "อู่สไตล์ American garage + แบรนด์ออนไลน์ โทนเข้ม/ไฟนีออน",
+        pj2: "Web Landing / Storefront",
+        pj2p: "หน้าแนะนำตัว/หน้าร้านแบบเร็ว ลื่น มือถือก็หล่อ",
+        pj3: "Artwork / Characters",
+        pj3p: "ภาพตัวละคร โทนเข้ม เท่ๆ เอาไปทำสติ๊กเกอร์/คอนเทนต์ได้",
+
+        contact_title: "Contact / ช่องทาง",
+        contact_hint: "กดแล้วคัดลอก",
+        copy: "COPY",
+        loc: "ที่อยู่",
+
+        toast_copied: "ก็อปแล้วไอหมา ✅",
+        toast_saved: "ดาวน์โหลดไฟล์ตัวอย่างแล้ว ✅",
+      },
+
+      en: {
+        nav_about: "About",
+        nav_skills: "Skills",
+        nav_projects: "Projects",
+        nav_contact: "Contact",
+
+        hero_title: "Yo — I’m <span style='color:var(--accent)'>Ryu</span> 👋",
+        hero_sub: "Automotive + big-bike guy with Thai roots and a clean American-garage vibe. I build, tune, and finish what I start.",
+        btn_copybio: "Copy Bio",
+        btn_download: "Download Resume (sample)",
+
+        chip_1: "⚙️ Automotive / Garage",
+        chip_2: "🏍️ Big Bike",
+        chip_3: "💻 Web / Branding",
+        chip_4: "✍️ Storytelling",
+
+        stat_1: "Rough work, clean finish",
+        stat_1s: "Hands-on first",
+        stat_2: "US x TH Style",
+        stat_2s: "American attitude, Thai heart",
+
+        panel_title_1: "Quick Intro",
+        panel_title_2: "Signature",
+        panel_hint_2: "copy-ready",
+
+        q_1: "Focus: wrenching + branding",
+        q_1p: "I make things feel real — from engines to web presence.",
+        q_2: "Style: American Garage",
+        q_2p: "Dark, neon, durable — built to be used.",
+        q_3: "Mode: get it done",
+        q_3p: "No dragging. Clear steps. Clean delivery.",
+
+        sig_title: "One-liner",
+        sig_line: "“Built with Thai roots, tuned with American attitude.”",
+        sig_title2: "Bio",
+        sig_bio: "Automotive + big bikes + web/branding. American-garage vibe, Thai roots, serious about real work.",
+
+        skills_title: "Skills",
+        skills_hint: "edit these",
+
+        sk1: "Automotive maintenance",
+        sk1p: "Drivetrain basics, troubleshooting, hands-on garage work",
+        sk2: "Big bike care & setup",
+        sk2p: "Safety checks, maintenance, upgrades with a reason",
+        sk3: "Web + branding",
+        sk3p: "Landing pages, neon UI, solid structure that works",
+        sk4: "Storytelling / content",
+        sk4p: "Strong tone + character — makes brands feel alive",
+
+        proj_title: "Projects",
+        proj_hint: "add links",
+
+        pj1: "Evan Vale Garage (concept)",
+        pj1p: "American garage look + online brand. Dark + neon identity.",
+        pj2: "Web Landing / Storefront",
+        pj2p: "Fast, smooth, mobile-first intro pages.",
+        pj3: "Artwork / Characters",
+        pj3p: "Dark-tone character art for stickers & content.",
+
+        contact_title: "Contact",
+        contact_hint: "click to copy",
+        copy: "COPY",
+        loc: "Location",
+
+        toast_copied: "Copied ✅",
+        toast_saved: "Sample file downloaded ✅",
+      }
+    };
+
+    const state = {
+      lang: "th"
+    };
+
+    const $ = (q, root=document) => root.querySelector(q);
+    const $$ = (q, root=document) => [...root.querySelectorAll(q)];
+
+    function applyLang(lang){
+      state.lang = lang;
+      $$("#langLabel")[0].textContent = lang.toUpperCase();
+      document.documentElement.lang = lang === "th" ? "th" : "en";
+
+      $$("[data-i18n]").forEach(el=>{
+        const key = el.getAttribute("data-i18n");
+        if(dict[lang][key]){
+          el.innerHTML = dict[lang][key];
+        }
+      });
+
+      // Update brand tagline
+      $("#brandTag").textContent = lang === "th" ? "US vibe • Thai roots" : "US vibe • Thai roots";
+      toast(lang === "th" ? "เปลี่ยนภาษาแล้ว ✅" : "Language switched ✅");
+      localStorage.setItem("ryu_lang", lang);
+    }
+
+    function toast(msg){
+      const el = $("#toast");
+      el.textContent = msg;
+      el.classList.add("show");
+      clearTimeout(toast._t);
+      toast._t = setTimeout(()=>el.classList.remove("show"), 1500);
+    }
+
+    function copyText(text){
+      navigator.clipboard.writeText(text).then(()=>{
+        toast(dict[state.lang].toast_copied);
+      }).catch(()=>{
+        // fallback
+        const ta = document.createElement("textarea");
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand("copy");
+        ta.remove();
+        toast(dict[state.lang].toast_copied);
+      });
+    }
+
+    // Download sample resume as txt (simple)
+    function downloadSample(){
+      const content = [
+        "RYU — Resume (Sample)",
+        "====================",
+        "",
+        "Title: Automotive / Big Bike / Web + Branding",
+        "Tagline: Built with Thai roots, tuned with American attitude.",
+        "",
+        "Skills:",
+        "- Automotive maintenance / troubleshooting",
+        "- Big bike care & safety checks",
+        "- Landing pages & branding UI",
+        "",
+        "Projects:",
+        "- Evan Vale Garage concept (American garage x online brand)",
+        "- Web landing / storefront templates",
+        "",
+        "Contact:",
+        "- Email: ryu@example.com",
+        "- GitHub: https://github.com/yourname",
+        ""
+      ].join("\n");
+
+      const blob = new Blob([content], {type:"text/plain;charset=utf-8"});
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "ryu_resume_sample.txt";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(a.href);
+      toast(dict[state.lang].toast_saved);
+    }
+
+    // Wire UI
+    $("#langBtn").addEventListener("click", ()=>{
+      applyLang(state.lang === "th" ? "en" : "th");
+    });
+
+    $("#copyBioBtn").addEventListener("click", ()=>{
+      const text = $("#bioText").innerText.trim() + "\n" + $("#oneLiner").innerText.trim();
+      copyText(text);
+    });
+
+    $("#downloadBtn").addEventListener("click", downloadSample);
+
+    $$(".contactBtn").forEach(btn=>{
+      btn.addEventListener("click", ()=>{
+        copyText(btn.getAttribute("data-copy"));
+      });
+    });
+
+    // Footer year + time hint
+    $("#year").textContent = new Date().getFullYear();
+    const pad = (n)=> String(n).padStart(2,"0");
+    const d = new Date();
+    $("#nowHint").textContent = `${pad(d.getHours())}:${pad(d.getMinutes())}`;
+
+    // Restore lang
+    const saved = localStorage.getItem("ryu_lang");
+    if(saved && (saved==="th" || saved==="en")) applyLang(saved);
+  </script>
 </body>
-</html>
+</html>                                                                                                                                                                  
